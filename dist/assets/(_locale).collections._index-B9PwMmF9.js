@@ -1,0 +1,1 @@
+import{j as e}from"./jsx-runtime-0DLF9kdB.js";const o=()=>[{title:"Hydrogen | Collections"}];function n(){return e.jsxs("div",{children:[e.jsx("h1",{children:"Collections"}),e.jsx("p",{children:"Select a collection to browse products."})]})}export{n as default,o as meta};

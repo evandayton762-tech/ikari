@@ -1,0 +1,15 @@
+:root {
+  --bg-primary: #0A100D;
+  --surface:    #D6D5C9;
+  --accent-primary: #A22C29;
+  --font-heading: 'Helvetica Neue', sans-serif;
+  --font-body:    'Inter', sans-serif;
+}
+
+@layer utilities {
+  .bg-primary      { background-color: var(--bg-primary); }
+  .text-surface    { color: var(--surface); }
+  .border-accent-primary { border-color: var(--accent-primary); }
+  .font-heading    { font-family: var(--font-heading); }
+  .font-body       { font-family: var(--font-body); }
+}

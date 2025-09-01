@@ -1,0 +1,403 @@
+{
+  "/Users/evandayton/Downloads/ikariupdatejune11/app/styles/app.css": {
+    "file": "assets/app-Bv0Oluef.css",
+    "src": "/Users/evandayton/Downloads/ikariupdatejune11/app/styles/app.css"
+  },
+  "/Users/evandayton/Downloads/ikariupdatejune11/app/styles/reset.css": {
+    "file": "assets/reset-BKioPaen.css",
+    "src": "/Users/evandayton/Downloads/ikariupdatejune11/app/styles/reset.css"
+  },
+  "/Users/evandayton/Downloads/ikariupdatejune11/node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/debug-network.css": {
+    "file": "assets/debug-network-mvOR6OhA.css",
+    "src": "/Users/evandayton/Downloads/ikariupdatejune11/node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/debug-network.css"
+  },
+  "/Users/evandayton/Downloads/ikariupdatejune11/node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/styles.css": {
+    "file": "assets/styles-CP5HafIK.css",
+    "src": "/Users/evandayton/Downloads/ikariupdatejune11/node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/styles.css"
+  },
+  "_CartMain-B0TYUt4d.js": {
+    "file": "assets/CartMain-B0TYUt4d.js",
+    "name": "CartMain",
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_index-Don8BO6t.js",
+      "_ProductPrice-ByvFHxrT.js",
+      "_variants-Dh9eBhrV.js",
+      "_Image-DhFI_Hdi.js",
+      "_components-CZEx2DQX.js",
+      "_Money-DBnmQhIx.js"
+    ]
+  },
+  "_Image-DhFI_Hdi.js": {
+    "file": "assets/Image-DhFI_Hdi.js",
+    "name": "Image",
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_components-CZEx2DQX.js"
+    ]
+  },
+  "_Money-DBnmQhIx.js": {
+    "file": "assets/Money-DBnmQhIx.js",
+    "name": "Money",
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_components-CZEx2DQX.js"
+    ]
+  },
+  "_Nav-C0ixbBTD.js": {
+    "file": "assets/Nav-C0ixbBTD.js",
+    "name": "Nav",
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_components-CZEx2DQX.js"
+    ]
+  },
+  "_ProductPrice-ByvFHxrT.js": {
+    "file": "assets/ProductPrice-ByvFHxrT.js",
+    "name": "ProductPrice",
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_components-CZEx2DQX.js",
+      "_Money-DBnmQhIx.js"
+    ]
+  },
+  "_client-CTP82fRV.js": {
+    "file": "assets/client-CTP82fRV.js",
+    "name": "client",
+    "isDynamicEntry": true,
+    "imports": [
+      "_components-CZEx2DQX.js"
+    ]
+  },
+  "_components-CZEx2DQX.js": {
+    "file": "assets/components-CZEx2DQX.js",
+    "name": "components",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js"
+    ]
+  },
+  "_favicon-CG_43MKL.js": {
+    "file": "assets/favicon-CG_43MKL.js",
+    "name": "favicon",
+    "assets": [
+      "assets/favicon-DZkC1E9c.svg"
+    ]
+  },
+  "_index-Don8BO6t.js": {
+    "file": "assets/index-Don8BO6t.js",
+    "name": "index",
+    "imports": [
+      "_preload-helper-ckwbz45p.js",
+      "_components-CZEx2DQX.js",
+      "_jsx-runtime-0DLF9kdB.js"
+    ],
+    "dynamicImports": [
+      "node_modules/@shopify/hydrogen/dist/production/log-seo-tags-TY72EQWZ.js"
+    ]
+  },
+  "_jsx-runtime-0DLF9kdB.js": {
+    "file": "assets/jsx-runtime-0DLF9kdB.js",
+    "name": "jsx-runtime"
+  },
+  "_preload-helper-ckwbz45p.js": {
+    "file": "assets/preload-helper-ckwbz45p.js",
+    "name": "preload-helper"
+  },
+  "_react-three-fiber.esm-B63sD3nm.js": {
+    "file": "assets/react-three-fiber.esm-B63sD3nm.js",
+    "name": "react-three-fiber.esm",
+    "isDynamicEntry": true,
+    "imports": [
+      "_components-CZEx2DQX.js",
+      "_jsx-runtime-0DLF9kdB.js"
+    ]
+  },
+  "_scroll-restoration-CwS7BImC.js": {
+    "file": "assets/scroll-restoration-CwS7BImC.js",
+    "name": "scroll-restoration",
+    "imports": [
+      "_components-CZEx2DQX.js"
+    ]
+  },
+  "_variants-Dh9eBhrV.js": {
+    "file": "assets/variants-Dh9eBhrV.js",
+    "name": "variants",
+    "imports": [
+      "_components-CZEx2DQX.js"
+    ]
+  },
+  "app/components/ProductScene.client.jsx": {
+    "file": "assets/ProductScene.client-B5bgs-fn.js",
+    "name": "ProductScene.client",
+    "src": "app/components/ProductScene.client.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_components-CZEx2DQX.js",
+      "_react-three-fiber.esm-B63sD3nm.js"
+    ]
+  },
+  "app/components/ThreeHero.client.jsx": {
+    "file": "assets/ThreeHero.client-6qWeGvp5.js",
+    "name": "ThreeHero.client",
+    "src": "app/components/ThreeHero.client.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_components-CZEx2DQX.js",
+      "_react-three-fiber.esm-B63sD3nm.js"
+    ]
+  },
+  "app/entry.client.jsx": {
+    "file": "assets/entry.client-vU6HjQtI.js",
+    "name": "entry.client",
+    "src": "app/entry.client.jsx",
+    "isEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_components-CZEx2DQX.js",
+      "_client-CTP82fRV.js"
+    ]
+  },
+  "app/root.jsx?__remix-build-client-route": {
+    "file": "assets/root-DVlOdu-_.js",
+    "name": "root",
+    "src": "app/root.jsx?__remix-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_components-CZEx2DQX.js",
+      "_ProductPrice-ByvFHxrT.js",
+      "_CartMain-B0TYUt4d.js",
+      "_index-Don8BO6t.js",
+      "_scroll-restoration-CwS7BImC.js",
+      "_Money-DBnmQhIx.js",
+      "_variants-Dh9eBhrV.js",
+      "_Image-DhFI_Hdi.js",
+      "_preload-helper-ckwbz45p.js"
+    ],
+    "assets": [
+      "assets/reset-BKioPaen.css",
+      "assets/app-Bv0Oluef.css"
+    ]
+  },
+  "app/routes/($locale).cart.$lines.jsx?__remix-build-client-route": {
+    "file": "assets/(_locale).cart._lines-l0sNRNKZ.js",
+    "name": "(_locale).cart._lines",
+    "src": "app/routes/($locale).cart.$lines.jsx?__remix-build-client-route",
+    "isEntry": true
+  },
+  "app/routes/($locale).cart.jsx?__remix-build-client-route": {
+    "file": "assets/(_locale).cart-BAcMz5ko.js",
+    "name": "(_locale).cart",
+    "src": "app/routes/($locale).cart.jsx?__remix-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_CartMain-B0TYUt4d.js",
+      "_components-CZEx2DQX.js",
+      "_index-Don8BO6t.js",
+      "_preload-helper-ckwbz45p.js",
+      "_ProductPrice-ByvFHxrT.js",
+      "_Money-DBnmQhIx.js",
+      "_variants-Dh9eBhrV.js",
+      "_Image-DhFI_Hdi.js"
+    ]
+  },
+  "app/routes/($locale).catalog.jsx?__remix-build-client-route": {
+    "file": "assets/(_locale).catalog-BLVzkGf5.js",
+    "name": "(_locale).catalog",
+    "src": "app/routes/($locale).catalog.jsx?__remix-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_preload-helper-ckwbz45p.js",
+      "_jsx-runtime-0DLF9kdB.js",
+      "_components-CZEx2DQX.js",
+      "_Nav-C0ixbBTD.js"
+    ],
+    "dynamicImports": [
+      "_react-three-fiber.esm-B63sD3nm.js",
+      "_client-CTP82fRV.js",
+      "_components-CZEx2DQX.js"
+    ]
+  },
+  "app/routes/($locale).collections.$handle.jsx?__remix-build-client-route": {
+    "file": "assets/(_locale).collections._handle-D12yGoFA.js",
+    "name": "(_locale).collections._handle",
+    "src": "app/routes/($locale).collections.$handle.jsx?__remix-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_variants-Dh9eBhrV.js",
+      "_components-CZEx2DQX.js",
+      "_Image-DhFI_Hdi.js",
+      "_Money-DBnmQhIx.js"
+    ]
+  },
+  "app/routes/($locale).collections._index.jsx?__remix-build-client-route": {
+    "file": "assets/(_locale).collections._index-B9PwMmF9.js",
+    "name": "(_locale).collections._index",
+    "src": "app/routes/($locale).collections._index.jsx?__remix-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js"
+    ]
+  },
+  "app/routes/($locale).discount.$code.jsx?__remix-build-client-route": {
+    "file": "assets/(_locale).discount._code-l0sNRNKZ.js",
+    "name": "(_locale).discount._code",
+    "src": "app/routes/($locale).discount.$code.jsx?__remix-build-client-route",
+    "isEntry": true
+  },
+  "app/routes/($locale).jsx?__remix-build-client-route": {
+    "file": "assets/(_locale)-l0sNRNKZ.js",
+    "name": "(_locale)",
+    "src": "app/routes/($locale).jsx?__remix-build-client-route",
+    "isEntry": true
+  },
+  "app/routes/($locale).products.$handle.jsx?__remix-build-client-route": {
+    "file": "assets/(_locale).products._handle-gZ1afSkV.js",
+    "name": "(_locale).products._handle",
+    "src": "app/routes/($locale).products.$handle.jsx?__remix-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_preload-helper-ckwbz45p.js",
+      "_jsx-runtime-0DLF9kdB.js",
+      "_components-CZEx2DQX.js",
+      "_index-Don8BO6t.js",
+      "_ProductPrice-ByvFHxrT.js",
+      "_Money-DBnmQhIx.js"
+    ],
+    "dynamicImports": [
+      "app/components/ProductScene.client.jsx"
+    ]
+  },
+  "app/routes/($locale).search.jsx?__remix-build-client-route": {
+    "file": "assets/(_locale).search-L60BFzhR.js",
+    "name": "(_locale).search",
+    "src": "app/routes/($locale).search.jsx?__remix-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_index-Don8BO6t.js",
+      "_components-CZEx2DQX.js",
+      "_Image-DhFI_Hdi.js",
+      "_Money-DBnmQhIx.js",
+      "_preload-helper-ckwbz45p.js"
+    ]
+  },
+  "app/routes/($locale).shop.jsx?__remix-build-client-route": {
+    "file": "assets/(_locale).shop-kNamTT6W.js",
+    "name": "(_locale).shop",
+    "src": "app/routes/($locale).shop.jsx?__remix-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_preload-helper-ckwbz45p.js",
+      "_jsx-runtime-0DLF9kdB.js",
+      "_components-CZEx2DQX.js"
+    ],
+    "dynamicImports": [
+      "app/components/ProductScene.client.jsx"
+    ]
+  },
+  "app/routes/_index.jsx?__remix-build-client-route": {
+    "file": "assets/_index-FrFgav-P.js",
+    "name": "_index",
+    "src": "app/routes/_index.jsx?__remix-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_preload-helper-ckwbz45p.js",
+      "_jsx-runtime-0DLF9kdB.js",
+      "_components-CZEx2DQX.js",
+      "_Nav-C0ixbBTD.js"
+    ],
+    "dynamicImports": [
+      "app/components/ThreeHero.client.jsx",
+      "_client-CTP82fRV.js"
+    ]
+  },
+  "node_modules/@shopify/hydrogen/dist/production/log-seo-tags-TY72EQWZ.js": {
+    "file": "assets/log-seo-tags-TY72EQWZ-DCHH-_Gl.js",
+    "name": "log-seo-tags-TY72EQWZ",
+    "src": "node_modules/@shopify/hydrogen/dist/production/log-seo-tags-TY72EQWZ.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/favicon-dark.svg": {
+    "file": "assets/favicon-dark-B35gQ1-G.svg",
+    "src": "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/favicon-dark.svg"
+  },
+  "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/favicon.svg": {
+    "file": "assets/favicon-DZkC1E9c.svg",
+    "src": "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/favicon.svg"
+  },
+  "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/inter-variable-font.woff2": {
+    "file": "assets/inter-variable-font-DNXbu9-7.woff2",
+    "src": "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/inter-variable-font.woff2"
+  },
+  "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/jetbrainsmono-variable-font.woff2": {
+    "file": "assets/jetbrainsmono-variable-font-D38mVOp5.woff2",
+    "src": "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/jetbrainsmono-variable-font.woff2"
+  },
+  "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/routes/graphiql.jsx?__remix-build-client-route": {
+    "file": "assets/graphiql-l0sNRNKZ.js",
+    "name": "graphiql",
+    "src": "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/routes/graphiql.jsx?__remix-build-client-route",
+    "isEntry": true
+  },
+  "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/routes/index.jsx?__remix-build-client-route": {
+    "file": "assets/index-DVG3Qj5P.js",
+    "name": "index",
+    "src": "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/routes/index.jsx?__remix-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_favicon-CG_43MKL.js",
+      "_components-CZEx2DQX.js"
+    ],
+    "assets": [
+      "assets/inter-variable-font-DNXbu9-7.woff2",
+      "assets/jetbrainsmono-variable-font-D38mVOp5.woff2"
+    ]
+  },
+  "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/routes/subrequest-profiler.jsx?__remix-build-client-route": {
+    "file": "assets/subrequest-profiler-C-g8WKuL.js",
+    "name": "subrequest-profiler",
+    "src": "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/routes/subrequest-profiler.jsx?__remix-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_components-CZEx2DQX.js",
+      "_index-Don8BO6t.js",
+      "_favicon-CG_43MKL.js",
+      "_preload-helper-ckwbz45p.js"
+    ],
+    "assets": [
+      "assets/favicon-dark-B35gQ1-G.svg",
+      "assets/debug-network-mvOR6OhA.css"
+    ]
+  },
+  "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/virtual-root-with-layout.jsx?__remix-build-client-route": {
+    "file": "assets/virtual-root-with-layout-BPiTGFQO.js",
+    "name": "virtual-root-with-layout",
+    "src": "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/virtual-root-with-layout.jsx?__remix-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_favicon-CG_43MKL.js",
+      "_index-Don8BO6t.js",
+      "_components-CZEx2DQX.js",
+      "_scroll-restoration-CwS7BImC.js",
+      "_preload-helper-ckwbz45p.js"
+    ],
+    "assets": [
+      "assets/inter-variable-font-DNXbu9-7.woff2",
+      "assets/jetbrainsmono-variable-font-D38mVOp5.woff2",
+      "assets/styles-CP5HafIK.css"
+    ]
+  },
+  "oxygen.json": {
+    "file": "oxygen.json",
+    "src": "oxygen.json"
+  }
+}
