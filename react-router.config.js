@@ -1,6 +1,6 @@
 export default {
   appDirectory: 'app',
-  buildDirectory: 'dist/client',
+  buildDirectory: 'dist',
   ssr: true,
 };
 
