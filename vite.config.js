@@ -1,20 +1,22 @@
 import {defineConfig} from 'vite';
 import {hydrogen} from '@shopify/hydrogen/vite';
 import {oxygen} from '@shopify/mini-oxygen/vite';
+import {vitePlugin as remix} from '@remix-run/dev';
 
 import path from 'path';
 
 export default defineConfig({
   plugins: [
-    hydrogen({
-      remix: {
-        future: {
-          v3_fetcherPersist: true,
-          v3_relativeSplatPath: true,
-          v3_throwAbortReason: true,
-        },
+    remix({
+      presets: [hydrogen.preset()],
+      assetsBuildDirectory: 'dist',
+      future: {
+        v3_fetcherPersist: true,
+        v3_relativeSplatPath: true,
+        v3_throwAbortReason: true,
       },
     }),
+    hydrogen(), // ADD THIS LINE - This is what's missing!
     oxygen(),
   ],
   resolve: {
@@ -23,7 +25,6 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'dist/client',
     assetsInlineLimit: 0,
   },
   ssr: {
