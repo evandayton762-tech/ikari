@@ -9,7 +9,6 @@ export default defineConfig({
   plugins: [
     remix({
       presets: [hydrogen.preset()],
-      assetsBuildDirectory: 'dist',
       future: {
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
@@ -25,6 +24,7 @@ export default defineConfig({
     },
   },
   build: {
+    outDir: 'dist/client',
     assetsInlineLimit: 0,
   },
   ssr: {
