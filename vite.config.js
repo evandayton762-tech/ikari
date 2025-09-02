@@ -23,6 +23,7 @@ export default defineConfig({
     },
   },
   build: {
+    outDir: 'dist/client',
     assetsInlineLimit: 0,
   },
   ssr: {
