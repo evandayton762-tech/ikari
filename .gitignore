@@ -1,0 +1,16 @@
+# Dependencies
+/node_modules
+/dist
+.vite/
+
+# Env files
+.env
+.env.*
+
+# General
+.DS_Store
+*.log
+
+# Project specific
+.code/
+ikari/
