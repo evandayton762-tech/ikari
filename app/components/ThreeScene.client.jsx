@@ -12,7 +12,7 @@ function GokuModel() {
   const [model, setModel] = useState(null);
   useEffect(() => {
     new GLTFLoader().load(
-      '/models/goku.glb',
+      'public/models/goku.glb',
       (gltf) => setModel(gltf.scene),
       undefined,
       console.error
