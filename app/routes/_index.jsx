@@ -22,7 +22,7 @@ export default function Index() {
     >
       {/* frame overlay */}
       <img
-        src="/webframe2.png" // ✅ Direct URL — no Vite import
+        src={webframeUrl}
         alt=""
         style={{
           filter: 'invert(100%)',
