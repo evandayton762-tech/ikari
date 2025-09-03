@@ -6,6 +6,8 @@ import React, {useEffect, useState} from 'react';
 import {Canvas} from '@react-three/fiber';
 import {OrbitControls, PerspectiveCamera} from '@react-three/drei';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
+import '~/assets/preserve-glbs'; // <- so Vite/Oxygen doesn't tree-shake it
+
 
 function GokuModel() {
   const [model, setModel] = useState(null);
