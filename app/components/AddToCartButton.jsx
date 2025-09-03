@@ -32,6 +32,9 @@ export function AddToCartButton({
             type="hidden"
             value={JSON.stringify(analytics)}
           />
+          {redirectTo ? (
+            <input name="redirectTo" type="hidden" value={redirectTo} />
+          ) : null}
           <button
             type="submit"
             onClick={onClick}
@@ -39,8 +42,16 @@ export function AddToCartButton({
             className={className}
             style={style}
           >
-            {children}
+            {fetcher.state !== 'idle' ? 'Adding…' : children}
           </button>
+          {/* Dev-only error surface to help diagnose why nothing happens */}
+          {fetcher.state === 'idle' && fetcher.data?.errors?.length ? (
+            <div style={{color:'#f66', fontSize:12, marginTop:6}}>
+              {Array.isArray(fetcher.data.errors)
+                ? fetcher.data.errors.join(', ')
+                : String(fetcher.data.errors)}
+            </div>
+          ) : null}
         </>
       )}
     </CartForm>

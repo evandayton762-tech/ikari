@@ -10,56 +10,79 @@ export const meta = () => {
 export const headers = ({actionHeaders}) => actionHeaders;
 
 export async function action({request, context}) {
-  const {cart} = context;
+  const {cart, env} = context;
+  const debug = Boolean(env?.DEBUG_CART);
 
   const formData = await request.formData();
-
-  const {action, inputs} = CartForm.getFormInput(formData);
-
-  if (!action) {
-    throw new Error('No action provided');
-  }
-
   let status = 200;
   let result;
 
-  switch (action) {
-    case CartForm.ACTIONS.LinesAdd:
-      result = await cart.addLines(inputs.lines);
-      break;
-    case CartForm.ACTIONS.LinesUpdate:
-      result = await cart.updateLines(inputs.lines);
-      break;
-    case CartForm.ACTIONS.LinesRemove:
-      result = await cart.removeLines(inputs.lineIds);
-      break;
-    case CartForm.ACTIONS.DiscountCodesUpdate: {
-      const formDiscountCode = inputs.discountCode;
-      const discountCodes = formDiscountCode ? [formDiscountCode] : [];
-      discountCodes.push(...inputs.discountCodes);
-      result = await cart.updateDiscountCodes(discountCodes);
-      break;
+  try {
+    const {action, inputs} = CartForm.getFormInput(formData);
+
+    if (!action) {
+      throw new Error('No action provided');
     }
-    case CartForm.ACTIONS.GiftCardCodesUpdate: {
-      const formGiftCardCode = inputs.giftCardCode;
-      const giftCardCodes = formGiftCardCode ? [formGiftCardCode] : [];
-      giftCardCodes.push(...inputs.giftCardCodes);
-      result = await cart.updateGiftCardCodes(giftCardCodes);
-      break;
+
+    switch (action) {
+      case CartForm.ACTIONS.LinesAdd: {
+        if (!Array.isArray(inputs?.lines) || inputs.lines.length === 0) {
+          throw new Error('LinesAdd requires at least one line');
+        }
+        result = await cart.addLines(inputs.lines);
+        break;
+      }
+      case CartForm.ACTIONS.LinesUpdate: {
+        result = await cart.updateLines(inputs.lines);
+        break;
+      }
+      case CartForm.ACTIONS.LinesRemove: {
+        result = await cart.removeLines(inputs.lineIds);
+        break;
+      }
+      case CartForm.ACTIONS.DiscountCodesUpdate: {
+        const formDiscountCode = inputs.discountCode;
+        const discountCodes = formDiscountCode ? [formDiscountCode] : [];
+        discountCodes.push(...(inputs.discountCodes ?? []));
+        result = await cart.updateDiscountCodes(discountCodes);
+        break;
+      }
+      case CartForm.ACTIONS.GiftCardCodesUpdate: {
+        const formGiftCardCode = inputs.giftCardCode;
+        const giftCardCodes = formGiftCardCode ? [formGiftCardCode] : [];
+        giftCardCodes.push(...(inputs.giftCardCodes ?? []));
+        result = await cart.updateGiftCardCodes(giftCardCodes);
+        break;
+      }
+      case CartForm.ACTIONS.BuyerIdentityUpdate: {
+        result = await cart.updateBuyerIdentity({
+          ...inputs.buyerIdentity,
+        });
+        break;
+      }
+      default:
+        throw new Error(`${action} cart action is not defined`);
     }
-    case CartForm.ACTIONS.BuyerIdentityUpdate: {
-      result = await cart.updateBuyerIdentity({
-        ...inputs.buyerIdentity,
-      });
-      break;
-    }
-    default:
-      throw new Error(`${action} cart action is not defined`);
+  } catch (err) {
+    if (debug) console.error('[cart.action] error', err);
+    // Surface a safe error payload for fetcher clients
+    return data(
+      {
+        cart: null,
+        errors: [String(err?.message || err)],
+        warnings: [],
+        analytics: {cartId: null},
+      },
+      {status: 400},
+    );
   }
 
   const cartId = result?.cart?.id;
   const headers = cartId ? cart.setCartId(result.cart.id) : new Headers();
-  const {cart: cartResult, errors, warnings} = result;
+
+  // If the Storefront API responded with errors, mark as bad request for fetcher state handling
+  const {cart: cartResult, errors = [], warnings = []} = result ?? {};
+  if (errors?.length) status = 400;
 
   const redirectTo = formData.get('redirectTo') ?? null;
   if (typeof redirectTo === 'string') {
