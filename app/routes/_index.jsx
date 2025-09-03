@@ -1,13 +1,12 @@
-// app/routes/_index.jsx
-import React, {useEffect, useState} from 'react';
-import webframeUrl from '/webframe2.png?url';
+import React, { useEffect, useState } from 'react';
+import '~/assets/preserve-glbs'; // Prevents Vite/Oxygen tree-shaking
 
 // ClientOnly guard
-function ClientOnly({children}) {
+function ClientOnly({ children }) {
   return import.meta.env.SSR ? null : children;
 }
 
-export const meta = () => [{title: 'Ikari'}];
+export const meta = () => [{ title: 'Ikari' }];
 
 export default function Index() {
   return (
@@ -22,7 +21,7 @@ export default function Index() {
     >
       {/* frame overlay */}
       <img
-        src={webframeUrl}
+        src="/webframe2.png" // ✅ Direct URL — no Vite import
         alt=""
         style={{
           filter: 'invert(100%)',
@@ -71,9 +70,9 @@ export default function Index() {
           zIndex: 50,
         }}
       >
-        <div style={{color: '#666'}}>Arizona</div>
-        <div style={{color: '#666'}}>50° 27′0.0036″ N</div>
-        <div style={{color: '#666'}}>30° 31′23.9988″ E</div>
+        <div style={{ color: '#666' }}>Arizona</div>
+        <div style={{ color: '#666' }}>50° 27′0.0036″ N</div>
+        <div style={{ color: '#666' }}>30° 31′23.9988″ E</div>
       </div>
 
       {/* menu top-right */}
@@ -92,10 +91,10 @@ export default function Index() {
           zIndex: 50,
         }}
       >
-        <div style={{color: '#666'}}>Creating</div>
-        <div style={{color: '#fff'}}>Memorable</div>
-        <div style={{color: '#fff'}}>Abstract</div>
-        <div style={{color: '#fff'}}>Art</div>
+        <div style={{ color: '#666' }}>Creating</div>
+        <div style={{ color: '#fff' }}>Memorable</div>
+        <div style={{ color: '#fff' }}>Abstract</div>
+        <div style={{ color: '#fff' }}>Art</div>
       </div>
 
       {/* bottom-left text */}
@@ -169,8 +168,8 @@ function ThreeSceneLoader() {
 
   useEffect(() => {
     if (loaded) return;
-    import('../components/ThreeHero.client').then(({default: ThreeHero}) => {
-      import('react-dom/client').then(({createRoot}) => {
+    import('../components/ThreeHero.client').then(({ default: ThreeHero }) => {
+      import('react-dom/client').then(({ createRoot }) => {
         const container = document.createElement('div');
         container.id = 'three-container';
         Object.assign(container.style, {

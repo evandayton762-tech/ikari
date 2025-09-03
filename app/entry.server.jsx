@@ -1,4 +1,8 @@
 // app/entry.server.jsx
+
+// 👇 Force Oxygen/Vite to include these glb assets
+import '~/assets/preserve-glbs';
+
 import { RemixServer } from '@remix-run/react';
 import { renderToReadableStream } from 'react-dom/server';
 
