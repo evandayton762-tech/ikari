@@ -1,15 +1,12 @@
 // app/routes/_index.jsx
-import {useState, useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 
-// Minimal ClientOnly helper to skip rendering on the server
-function ClientOnly({fallback = null, children}) {
-  if (import.meta.env.SSR) {
-    return fallback;
-  }
-  return children();
+// ClientOnly guard to skip server‐side render of Three.js
+function ClientOnly({ children }) {
+  return import.meta.env.SSR ? null : children;
 }
 
-export const meta = () => [{title: 'Ikari'}];
+export const meta = () => [{ title: 'Ikari' }];
 
 export default function Index() {
   return (
@@ -24,7 +21,7 @@ export default function Index() {
     >
       {/* PNG frame overlay */}
       <img
-        src="/webframe2.png"
+        src="/_static/webframe2.png"
         alt=""
         style={{
           filter: 'invert(100%)',
@@ -59,7 +56,7 @@ export default function Index() {
         IKARI
       </h1>
 
-      {/* Top-left coordinates */}
+      {/* Top-left row */}
       <div
         style={{
           position: 'absolute',
@@ -74,12 +71,12 @@ export default function Index() {
           zIndex: 50,
         }}
       >
-        <div style={{color: '#666'}}>Arizona</div>
-        <div style={{color: '#666'}}>50° 27′ 0.0036″ N</div>
-        <div style={{color: '#666'}}>30° 31′ 23.9988″ E</div>
+        <div style={{ color: '#666' }}>Arizona</div>
+        <div style={{ color: '#666' }}>50° 27′ 0.0036″ N</div>
+        <div style={{ color: '#666' }}>30° 31′ 23.9988″ E</div>
       </div>
 
-      {/* Top-right menu labels */}
+      {/* Top-right row */}
       <div
         style={{
           position: 'absolute',
@@ -95,10 +92,10 @@ export default function Index() {
           zIndex: 50,
         }}
       >
-        <div style={{color: '#666'}}>Creating</div>
-        <div style={{color: '#fff'}}>Memorable</div>
-        <div style={{color: '#fff'}}>Abstract</div>
-        <div style={{color: '#fff'}}>Art</div>
+        <div style={{ color: '#666' }}>Creating</div>
+        <div style={{ color: '#fff' }}>Memorable</div>
+        <div style={{ color: '#fff' }}>Abstract</div>
+        <div style={{ color: '#fff' }}>Art</div>
       </div>
 
       {/* Bottom-left text */}
@@ -161,43 +158,36 @@ export default function Index() {
         Contact
       </button>
 
-      {/* Three.js scene — runs only in the browser */}
-      <ClientOnly fallback={null}>
-        {() => (
-          <>
-            <div
-              id="three-container"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                zIndex: 5,
-              }}
-            />
-            <ThreeSceneLoader />
-          </>
-        )}
+      {/* Three.js scene — only on client */}
+      <ClientOnly>
+        <ThreeSceneLoader />
       </ClientOnly>
     </div>
   );
 }
 
-/* --- ThreeSceneLoader (unchanged) ------------------------------- */
+// This loader mounts your Three.js scene into the div
 function ThreeSceneLoader() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    const init = async () => {
-      const {default: ThreeHero} = await import('../components/ThreeHero.client');
-      const {createRoot} = await import('react-dom/client');
-      const container = document.getElementById('three-container');
-      if (container && !loaded) {
+    if (loaded) return;
+    import('../components/ThreeHero.client').then(({ default: ThreeHero }) => {
+      import('react-dom/client').then(({ createRoot }) => {
+        const container = document.createElement('div');
+        container.id = 'three-container';
+        Object.assign(container.style, {
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 5,
+        });
+        document.body.appendChild(container);
         createRoot(container).render(<ThreeHero />);
         setLoaded(true);
-      }
-    };
-    init();
+      });
+    });
   }, [loaded]);
 
   return null;

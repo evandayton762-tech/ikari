@@ -1,18 +1,12 @@
 // app/components/ThreeScene.client.jsx
-/* eslint-disable react/no-unknown-property */
-/* eslint-disable react/no-unused-vars */
-/* eslint-disable no-console */
-import React, {useEffect, useState} from 'react';
-import {Canvas} from '@react-three/fiber';
-import {OrbitControls, PerspectiveCamera} from '@react-three/drei';
-import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
+import React, { useEffect, useState } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-// Guard to skip this entire component during SSR
-function ClientOnlyRenderer({children}) {
-  if (import.meta.env.SSR) {
-    return null;
-  }
-  return children;
+// Guard to prevent SSR
+function ClientOnly({ children }) {
+  return import.meta.env.SSR ? null : children;
 }
 
 function GokuModel() {
@@ -20,10 +14,10 @@ function GokuModel() {
 
   useEffect(() => {
     new GLTFLoader().load(
-      '/models/goku.glb',            // 🔥 correct public path
+      '/_static/models/goku.glb',
       (gltf) => setModel(gltf.scene),
       undefined,
-      (err) => console.error(err)
+      console.error
     );
   }, []);
 
@@ -33,7 +27,7 @@ function GokuModel() {
 
 export default function ThreeScene() {
   return (
-    <ClientOnlyRenderer>
+    <ClientOnly>
       <Canvas>
         <PerspectiveCamera makeDefault position={[0, 1.5, 5]} />
         <ambientLight intensity={0.3} />
@@ -45,10 +39,8 @@ export default function ThreeScene() {
           autoRotate
           autoRotateSpeed={0.5}
           enablePan={false}
-          minPolarAngle={Math.PI / 3}
-          maxPolarAngle={Math.PI / 1.5}
         />
       </Canvas>
-    </ClientOnlyRenderer>
+    </ClientOnly>
   );
 }
