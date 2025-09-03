@@ -4,8 +4,7 @@ import { Canvas } from '@react-three/fiber';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import ParticleEffect from './ParticleEffect';
 import GokuTrail from '~/components/GokuTrail';
-import '~/assets/preserve-glbs'; // <- so Vite/Oxygen doesn't tree-shake it
-
+import '~/assets/preserve-glbs';
 
 import gokuUrl from '~/assets/models/goku.glb?url';
 

@@ -1,4 +1,3 @@
-// vite.config.js
 import { defineConfig } from 'vite';
 import { hydrogen } from '@shopify/hydrogen/vite';
 import { oxygen } from '@shopify/mini-oxygen/vite';
@@ -6,12 +5,11 @@ import { vitePlugin as remix } from '@remix-run/dev';
 import path from 'path';
 
 export default defineConfig({
-  // Tell Vite where to find your static assets now that they live under public/
+  // Tell Vite where to find your static assets
   publicDir: 'public',
 
   plugins: [
     remix({
-      // Use Hydrogen’s preset inside the Remix plugin
       presets: [hydrogen.preset()],
       future: {
         v3_fetcherPersist: true,
