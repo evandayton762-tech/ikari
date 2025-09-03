@@ -9,8 +9,9 @@ export default function GlobalParticles() {
       style={{
         position: 'fixed',
         inset: 0,
+        // Ensure this decorative layer never intercepts clicks
         pointerEvents: 'none',
-        zIndex: 1,
+        zIndex: -1,
       }}
     >
       {!prefersReduced && (
@@ -18,7 +19,8 @@ export default function GlobalParticles() {
         gl={{alpha: true, antialias: true}}
         dpr={[1, 1.5]}
         camera={{position: [0, 0, 6], fov: 45}}
-        style={{width: '100%', height: '100%'}}
+        // Belt-and-suspenders: pointer events off at the canvas too
+        style={{width: '100%', height: '100%', pointerEvents: 'none'}}
       >
         <ambientLight intensity={0.6} />
         <Suspense fallback={null}>

@@ -139,8 +139,14 @@ export default function Product() {
     }
   }
 
+  const media = selectedVariant?.image || product?.featuredImage || {};
+  const imgW = media?.width || 0;
+  const imgH = media?.height || 0;
+  const isPortrait = imgH && imgW ? imgH >= imgW : false;
+  const aspect = isPortrait ? '3 / 4' : '16 / 10';
+
   return (
-    <div
+    <div className="product-page"
       style={{
         minHeight: '100vh',
         background: '#000',
@@ -150,6 +156,8 @@ export default function Product() {
         gap: '2rem',
         padding: '5.5rem 3rem 3rem',
         alignItems: 'start',
+        position: 'relative',
+        zIndex: 2,
       }}
     >
       {/* Back control */}
@@ -162,8 +170,8 @@ export default function Product() {
         }}
       >← Back</button>
       {/* Left: 3D panel */}
-      <div style={{border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '1rem', background: '#0d0d0d'}}>
-        <div style={{width: '100%', aspectRatio: '1 / 1', maxHeight: '70vh'}}>
+      <div style={{border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '1rem', background: '#0d0d0d', position:'relative', overflow:'hidden', zIndex:1}}>
+        <div style={{width: '100%', aspectRatio: aspect, maxHeight: isPortrait ? '66vh' : '78vh'}}>
           <Suspense fallback={<div style={{padding: '2rem', color: '#888'}}>Loading…</div>}>
             {imageUrl ? (
               <ProductScene textureUrl={imageUrl} />
@@ -175,7 +183,7 @@ export default function Product() {
       </div>
 
       {/* Right: details */}
-      <div style={{padding: '0 0.5rem'}}>
+      <div style={{padding: '0 0.5rem', position: 'relative', zIndex: 3, pointerEvents:'auto'}}>
         <h1 style={{
           margin: 0,
           fontFamily: 'monospace',
@@ -240,7 +248,7 @@ export default function Product() {
                 fontWeight: 700,
                 letterSpacing: '.08em',
                 textTransform: 'uppercase',
-                cursor:'pointer',
+                cursor:'pointer', position:'relative', zIndex:50,
               }}
             >
               {selectedVariant?.availableForSale ? 'Add to Cart' : 'Sold Out'}
