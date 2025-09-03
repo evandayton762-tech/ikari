@@ -1,6 +1,6 @@
 // app/routes/_index.jsx
 import React, {useEffect, useState} from 'react';
-import webframeUrl from '/webframe2.png?url';
+const webframeUrl = '/webframe2.png';
 
 // ClientOnly guard
 function ClientOnly({children}) {
