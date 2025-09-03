@@ -1,5 +1,15 @@
+// app/routes/_index.jsx
 import {useEffect, useState} from 'react';
-import {ClientOnly} from '@shopify/hydrogen'; // ✅ NEW: ensures Three.js loads only on client
+
+// Minimal ClientOnly helper to skip rendering on the server
+function ClientOnly({fallback = null, children}) {
+  // During SSR, import.meta.env.SSR is true
+  if (import.meta.env.SSR) {
+    return fallback;
+  }
+  // On the client, children is a render-prop function
+  return children();
+}
 
 export const meta = () => [{title: 'Ikari'}];
 
@@ -177,7 +187,7 @@ export default function Index() {
   );
 }
 
-/* --- ThreeSceneLoader (unchanged) ------------------------------- */
+// ThreeSceneLoader remains unchanged
 function ThreeSceneLoader() {
   const [loaded, setLoaded] = useState(false);
 
