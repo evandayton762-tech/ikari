@@ -5,7 +5,7 @@ import { useGLTF, useAnimations, OrbitControls, PerspectiveCamera } from '@react
 
 function GokuModel() {
   const ref = useRef();
-  const { scene, animations } = useGLTF('/_static/models/goku.glb');
+  const { scene, animations } = useGLTF('/models/goku.glb');
   const { actions } = useAnimations(animations, ref);
 
   useEffect(() => {
@@ -27,15 +27,14 @@ function GokuModel() {
 export default function ThreeHero() {
   return (
     <Canvas
-      camera={{ position: [0, 1.5, 1], fov: 10, near: 0.1, far: 100 }}
-      style={{ width: '100%', height: '100%' }}
+      camera={{position: [0, 1.5, 1], fov: 10, near: 0.1, far: 100}}
+      style={{width: '100%', height: '100%'}}
     >
       <ambientLight intensity={0.8} />
       <directionalLight position={[5, 10, 7]} intensity={1} />
 
       <Suspense fallback={null}>
         <GokuModel />
-        {/* If you also use GokuTrail, update its URLs similarly */}
       </Suspense>
 
       <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.5} enablePan={false} />

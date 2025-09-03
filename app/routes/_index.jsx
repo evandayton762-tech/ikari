@@ -1,12 +1,12 @@
 // app/routes/_index.jsx
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
-// ClientOnly guard to skip server‐side render of Three.js
-function ClientOnly({ children }) {
+// ClientOnly guard
+function ClientOnly({children}) {
   return import.meta.env.SSR ? null : children;
 }
 
-export const meta = () => [{ title: 'Ikari' }];
+export const meta = () => [{title: 'Ikari'}];
 
 export default function Index() {
   return (
@@ -19,9 +19,9 @@ export default function Index() {
         backgroundColor: '#000',
       }}
     >
-      {/* PNG frame overlay */}
+      {/* frame overlay */}
       <img
-        src="/_static/webframe2.png"
+        src="/webframe2.png"
         alt=""
         style={{
           filter: 'invert(100%)',
@@ -34,7 +34,7 @@ export default function Index() {
         }}
       />
 
-      {/* Giant title */}
+      {/* IKARI title */}
       <h1
         style={{
           position: 'absolute',
@@ -46,7 +46,6 @@ export default function Index() {
           fontFamily: 'Arial Black, sans-serif',
           fontWeight: 900,
           letterSpacing: '0.06em',
-          textTransform: 'uppercase',
           color: '#fff',
           margin: 0,
           zIndex: 5,
@@ -56,7 +55,7 @@ export default function Index() {
         IKARI
       </h1>
 
-      {/* Top-left row */}
+      {/* coords top-left */}
       <div
         style={{
           position: 'absolute',
@@ -71,12 +70,12 @@ export default function Index() {
           zIndex: 50,
         }}
       >
-        <div style={{ color: '#666' }}>Arizona</div>
-        <div style={{ color: '#666' }}>50° 27′ 0.0036″ N</div>
-        <div style={{ color: '#666' }}>30° 31′ 23.9988″ E</div>
+        <div style={{color: '#666'}}>Arizona</div>
+        <div style={{color: '#666'}}>50° 27′0.0036″ N</div>
+        <div style={{color: '#666'}}>30° 31′23.9988″ E</div>
       </div>
 
-      {/* Top-right row */}
+      {/* menu top-right */}
       <div
         style={{
           position: 'absolute',
@@ -92,13 +91,13 @@ export default function Index() {
           zIndex: 50,
         }}
       >
-        <div style={{ color: '#666' }}>Creating</div>
-        <div style={{ color: '#fff' }}>Memorable</div>
-        <div style={{ color: '#fff' }}>Abstract</div>
-        <div style={{ color: '#fff' }}>Art</div>
+        <div style={{color: '#666'}}>Creating</div>
+        <div style={{color: '#fff'}}>Memorable</div>
+        <div style={{color: '#fff'}}>Abstract</div>
+        <div style={{color: '#fff'}}>Art</div>
       </div>
 
-      {/* Bottom-left text */}
+      {/* bottom-left text */}
       <div
         style={{
           position: 'absolute',
@@ -122,7 +121,7 @@ export default function Index() {
         </div>
       </div>
 
-      {/* Contact button */}
+      {/* contact button */}
       <button
         style={{
           position: 'absolute',
@@ -150,15 +149,13 @@ export default function Index() {
           e.currentTarget.style.color = '#fff';
         }}
         onClick={() => {
-          if (typeof window !== 'undefined') {
-            window.location.href = '/contact';
-          }
+          if (typeof window !== 'undefined') window.location.href = '/contact';
         }}
       >
         Contact
       </button>
 
-      {/* Three.js scene — only on client */}
+      {/* three scene loader */}
       <ClientOnly>
         <ThreeSceneLoader />
       </ClientOnly>
@@ -166,14 +163,13 @@ export default function Index() {
   );
 }
 
-// This loader mounts your Three.js scene into the div
 function ThreeSceneLoader() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     if (loaded) return;
-    import('../components/ThreeHero.client').then(({ default: ThreeHero }) => {
-      import('react-dom/client').then(({ createRoot }) => {
+    import('../components/ThreeHero.client').then(({default: ThreeHero}) => {
+      import('react-dom/client').then(({createRoot}) => {
         const container = document.createElement('div');
         container.id = 'three-container';
         Object.assign(container.style, {
