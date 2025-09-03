@@ -14,7 +14,6 @@ export default defineConfig({
         v3_throwAbortReason: true,
       },
     }),
-    hydrogen(),  // ADD THIS LINE - This is what's missing!
     oxygen(),
   ],
   resolve: {
