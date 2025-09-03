@@ -1,13 +1,11 @@
 // app/routes/_index.jsx
-import {useEffect, useState} from 'react';
+import {useState, useEffect} from 'react';
 
 // Minimal ClientOnly helper to skip rendering on the server
 function ClientOnly({fallback = null, children}) {
-  // During SSR, import.meta.env.SSR is true
   if (import.meta.env.SSR) {
     return fallback;
   }
-  // On the client, children is a render-prop function
   return children();
 }
 
@@ -61,14 +59,13 @@ export default function Index() {
         IKARI
       </h1>
 
-      {/* Top-left horizontal row */}
+      {/* Top-left coordinates */}
       <div
         style={{
           position: 'absolute',
           top: '3.5rem',
           left: '4rem',
           display: 'flex',
-          flexDirection: 'row',
           columnGap: '.5rem',
           color: '#999',
           fontSize: '.7rem',
@@ -78,18 +75,17 @@ export default function Index() {
         }}
       >
         <div style={{color: '#666'}}>Arizona</div>
-        <div style={{color: '#666'}}>50° 27′0.0036″ N</div>
-        <div style={{color: '#666'}}>30° 31′23.9988″ E</div>
+        <div style={{color: '#666'}}>50° 27′ 0.0036″ N</div>
+        <div style={{color: '#666'}}>30° 31′ 23.9988″ E</div>
       </div>
 
-      {/* Top-right horizontal row */}
+      {/* Top-right menu labels */}
       <div
         style={{
           position: 'absolute',
           top: '3.5rem',
           right: '6rem',
           display: 'flex',
-          flexDirection: 'row',
           columnGap: '1rem',
           color: '#999',
           fontSize: '.7rem',
@@ -125,7 +121,7 @@ export default function Index() {
         >
           <div>Creative</div>
           <div>UI/UX</div>
-          <div>Design&nbsp;Studio</div>
+          <div>Design Studio</div>
         </div>
       </div>
 
@@ -165,7 +161,7 @@ export default function Index() {
         Contact
       </button>
 
-      {/* Three.js scene — loads only on client */}
+      {/* Three.js scene — runs only in the browser */}
       <ClientOnly fallback={null}>
         {() => (
           <>
@@ -187,7 +183,7 @@ export default function Index() {
   );
 }
 
-// ThreeSceneLoader remains unchanged
+/* --- ThreeSceneLoader (unchanged) ------------------------------- */
 function ThreeSceneLoader() {
   const [loaded, setLoaded] = useState(false);
 
