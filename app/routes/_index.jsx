@@ -1,14 +1,9 @@
-// app/routes/_index.jsx
 import {useEffect, useState} from 'react';
-
+import {ClientOnly} from '@shopify/hydrogen'; // ✅ NEW: ensures Three.js loads only on client
 
 export const meta = () => [{title: 'Ikari'}];
 
 export default function Index() {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => setIsClient(true), []);
-
   return (
     <div
       style={{
@@ -20,13 +15,11 @@ export default function Index() {
       }}
     >
       {/* PNG frame overlay */}
-      
       <img
         src="/webframe2.png"
         alt=""
         style={{
-          filter: "invert(100%)",
-
+          filter: 'invert(100%)',
           position: 'absolute',
           inset: 0,
           width: '100%',
@@ -65,8 +58,8 @@ export default function Index() {
           top: '3.5rem',
           left: '4rem',
           display: 'flex',
-          flexDirection: 'row', // horizontal
-          columnGap: '.5rem',    // ← space between items
+          flexDirection: 'row',
+          columnGap: '.5rem',
           color: '#999',
           fontSize: '.7rem',
           textTransform: 'uppercase',
@@ -83,11 +76,11 @@ export default function Index() {
       <div
         style={{
           position: 'absolute',
-          top: '3.5rem',          // align with left block
+          top: '3.5rem',
           right: '6rem',
           display: 'flex',
           flexDirection: 'row',
-          columnGap: '1rem',    // ← space between items
+          columnGap: '1rem',
           color: '#999',
           fontSize: '.7rem',
           textTransform: 'uppercase',
@@ -162,26 +155,29 @@ export default function Index() {
         Contact
       </button>
 
-      {/* Three.js mount point */}
-      {isClient && (
-        <div
-          id="three-container"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: 5,
-          }}
-        />
-      )}
-
-      {isClient && <ThreeSceneLoader />}
+      {/* Three.js scene — loads only on client */}
+      <ClientOnly fallback={null}>
+        {() => (
+          <>
+            <div
+              id="three-container"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                zIndex: 5,
+              }}
+            />
+            <ThreeSceneLoader />
+          </>
+        )}
+      </ClientOnly>
     </div>
   );
 }
 
-/* --- ThreeSceneLoader (unchanged) -------------------------------- */
+/* --- ThreeSceneLoader (unchanged) ------------------------------- */
 function ThreeSceneLoader() {
   const [loaded, setLoaded] = useState(false);
 
