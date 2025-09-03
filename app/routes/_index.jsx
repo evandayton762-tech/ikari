@@ -1,14 +1,17 @@
 // app/routes/_index.jsx
-import React, { Suspense } from 'react';
-import webframeUrl from '/webframe2.png?url';
-import ThreeHero from '~/components/ThreeHero.client.jsx';
+import {useEffect, useState} from 'react';
 
-// Client-only guard so our Canvas only renders in the browser
-function ClientOnly({ children }) {
-  return import.meta.env.SSR ? null : children;
+// Minimal ClientOnly helper to skip rendering on the server
+function ClientOnly({fallback = null, children}) {
+  // During SSR, import.meta.env.SSR is true
+  if (import.meta.env.SSR) {
+    return fallback;
+  }
+  // On the client, children is a render-prop function
+  return children();
 }
 
-export const meta = () => [{ title: 'Ikari' }];
+export const meta = () => [{title: 'Ikari'}];
 
 export default function Index() {
   return (
@@ -21,9 +24,9 @@ export default function Index() {
         backgroundColor: '#000',
       }}
     >
-      {/* frame overlay */}
+      {/* PNG frame overlay */}
       <img
-        src={webframeUrl}
+        src="/webframe2.png"
         alt=""
         style={{
           filter: 'invert(100%)',
@@ -36,7 +39,7 @@ export default function Index() {
         }}
       />
 
-      {/* IKARI title */}
+      {/* Giant title */}
       <h1
         style={{
           position: 'absolute',
@@ -48,6 +51,7 @@ export default function Index() {
           fontFamily: 'Arial Black, sans-serif',
           fontWeight: 900,
           letterSpacing: '0.06em',
+          textTransform: 'uppercase',
           color: '#fff',
           margin: 0,
           zIndex: 5,
@@ -57,31 +61,14 @@ export default function Index() {
         IKARI
       </h1>
 
-      {/* Three.js hero scene (client-only) */}
-      <ClientOnly>
-        <Suspense fallback={null}>
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              zIndex: 1,
-            }}
-          >
-            <ThreeHero />
-          </div>
-        </Suspense>
-      </ClientOnly>
-
-      {/* coords top-left */}
+      {/* Top-left horizontal row */}
       <div
         style={{
           position: 'absolute',
           top: '3.5rem',
           left: '4rem',
           display: 'flex',
+          flexDirection: 'row',
           columnGap: '.5rem',
           color: '#999',
           fontSize: '.7rem',
@@ -90,18 +77,19 @@ export default function Index() {
           zIndex: 50,
         }}
       >
-        <div style={{ color: '#666' }}>Arizona</div>
-        <div style={{ color: '#666' }}>50° 27′0.0036″ N</div>
-        <div style={{ color: '#666' }}>30° 31′23.9988″ E</div>
+        <div style={{color: '#666'}}>Arizona</div>
+        <div style={{color: '#666'}}>50° 27′0.0036″ N</div>
+        <div style={{color: '#666'}}>30° 31′23.9988″ E</div>
       </div>
 
-      {/* menu top-right */}
+      {/* Top-right horizontal row */}
       <div
         style={{
           position: 'absolute',
           top: '3.5rem',
           right: '6rem',
           display: 'flex',
+          flexDirection: 'row',
           columnGap: '1rem',
           color: '#999',
           fontSize: '.7rem',
@@ -111,13 +99,13 @@ export default function Index() {
           zIndex: 50,
         }}
       >
-        <div style={{ color: '#666' }}>Creating</div>
-        <div style={{ color: '#fff' }}>Memorable</div>
-        <div style={{ color: '#fff' }}>Abstract</div>
-        <div style={{ color: '#fff' }}>Art</div>
+        <div style={{color: '#666'}}>Creating</div>
+        <div style={{color: '#fff'}}>Memorable</div>
+        <div style={{color: '#fff'}}>Abstract</div>
+        <div style={{color: '#fff'}}>Art</div>
       </div>
 
-      {/* bottom-left text */}
+      {/* Bottom-left text */}
       <div
         style={{
           position: 'absolute',
@@ -131,37 +119,90 @@ export default function Index() {
             color: '#fff',
             textTransform: 'uppercase',
             fontSize: '0.875rem',
-            letterSpacing: '.1em',
+            letterSpacing: '0.1em',
             lineHeight: 1.4,
           }}
         >
           <div>Creative</div>
           <div>UI/UX</div>
-          <div>Design Studio</div>
+          <div>Design&nbsp;Studio</div>
         </div>
       </div>
 
-      {/* contact button */}
+      {/* Contact button */}
       <button
         style={{
           position: 'absolute',
           bottom: '4rem',
           right: '4rem',
-          padding: '0.75rem 1.25rem',
-          borderRadius: 14,
-          border: '1px solid rgba(255,255,255,0.08)',
-          background: '#000',
+          width: '7rem',
+          height: '7rem',
+          borderRadius: '50%',
+          border: '1px solid #666',
+          backgroundColor: 'transparent',
           color: '#fff',
-          letterSpacing: '.12em',
           textTransform: 'uppercase',
-          fontFamily: 'Arial, sans-serif',
+          fontSize: '0.875rem',
+          letterSpacing: '0.1em',
           cursor: 'pointer',
+          transition: 'all 0.3s ease',
           zIndex: 20,
         }}
-        onClick={() => (window.location.href = '/contact')}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = '#fff';
+          e.currentTarget.style.color = '#000';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = 'transparent';
+          e.currentTarget.style.color = '#fff';
+        }}
+        onClick={() => {
+          if (typeof window !== 'undefined') {
+            window.location.href = '/contact';
+          }
+        }}
       >
         Contact
       </button>
+
+      {/* Three.js scene — loads only on client */}
+      <ClientOnly fallback={null}>
+        {() => (
+          <>
+            <div
+              id="three-container"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                zIndex: 5,
+              }}
+            />
+            <ThreeSceneLoader />
+          </>
+        )}
+      </ClientOnly>
     </div>
   );
+}
+
+// ThreeSceneLoader remains unchanged
+function ThreeSceneLoader() {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const init = async () => {
+      const {default: ThreeHero} = await import('../components/ThreeHero.client');
+      const {createRoot} = await import('react-dom/client');
+      const container = document.getElementById('three-container');
+      if (container && !loaded) {
+        createRoot(container).render(<ThreeHero />);
+        setLoaded(true);
+      }
+    };
+    init();
+  }, [loaded]);
+
+  return null;
 }

@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable react/no-unused-vars */
 /* eslint-disable no-console */
+/* threescene.client.jsx */
 import React, {useEffect, useState} from 'react';
 import {Canvas} from '@react-three/fiber';
 import {OrbitControls, PerspectiveCamera} from '@react-three/drei';
