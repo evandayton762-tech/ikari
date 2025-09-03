@@ -5,9 +5,9 @@
   "version": "2025.4.0",
   "type": "module",
   "scripts": {
-    "build": "shopify hydrogen build --no-codegen",
-    "dev": "shopify hydrogen dev --no-codegen",
-    "preview": "shopify hydrogen preview --build --no-codegen",
+    "build": "shopify hydrogen build",
+    "dev": "shopify hydrogen dev",
+    "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern .",
     "codegen": "shopify hydrogen codegen"
   },
