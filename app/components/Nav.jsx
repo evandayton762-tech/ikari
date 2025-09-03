@@ -1,6 +1,7 @@
 // app/components/Nav.jsx
 import React from 'react';
 import { Link } from '@remix-run/react';
+import logoUrl from '~/assets/logo.png';
 
 class TextScramble {
   constructor(el) {
@@ -85,7 +86,7 @@ export default function Nav({color = '#fff', invertLogo = color !== '#000'}) {
       <div style={{ margin: '0 2rem' }}>
         <Link to="/" style={anchorStyle}>
           <img
-            src="/logo.png"
+            src={logoUrl}
             alt="Ikari"
             style={{
               width: '3rem',
