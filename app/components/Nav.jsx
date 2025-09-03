@@ -1,7 +1,7 @@
 // app/components/Nav.jsx
 import React from 'react';
 import { Link } from '@remix-run/react';
-import logoUrl from '~/assets/logo.png';
+import logoUrl from '/logo.png?url';
 
 class TextScramble {
   constructor(el) {

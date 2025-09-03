@@ -5,7 +5,7 @@ import { useGLTF, useAnimations, OrbitControls, PerspectiveCamera } from '@react
 
 function GokuModel() {
   const ref = useRef();
-  const { scene, animations } = useGLTF('public/models/goku.glb');
+  const { scene, animations } = useGLTF('/models/goku.glb');
   const { actions } = useAnimations(animations, ref);
 
   useEffect(() => {

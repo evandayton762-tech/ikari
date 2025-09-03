@@ -13,14 +13,14 @@ import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 
 import resetUrl from '~/styles/reset.css?url';
 import appUrl from '~/styles/app.css?url';
-import favicon from '~/assets/favicon.svg';
+import faviconUrl from '~/assets/favicon.svg';
 
 export const links = () => [
   {rel: 'preconnect', href: 'https://cdn.shopify.com'},
   {rel: 'stylesheet', href: resetUrl},
   {rel: 'stylesheet', href: appUrl},
   {rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'},
-  {rel: 'icon', type: 'image/svg+xml', href: favicon},
+  {rel: 'icon', type: 'image/svg+xml', href: faviconUrl},
 ];
 
 export async function loader({context}) {
