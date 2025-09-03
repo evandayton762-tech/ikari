@@ -1,5 +1,7 @@
 // app/routes/_index.jsx
 import {useEffect, useState} from 'react';
+import '~/assets/preserve-glbs'; // <- so Vite/Oxygen doesn't tree-shake it
+
 
 // Minimal ClientOnly helper to skip rendering on the server
 function ClientOnly({fallback = null, children}) {
