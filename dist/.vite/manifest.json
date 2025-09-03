@@ -1,6 +1,6 @@
 {
   "/Users/evandayton/Downloads/ikariupdatejune11/app/styles/app.css": {
-    "file": "assets/app-Bv0Oluef.css",
+    "file": "assets/app-BRNfoHGN.css",
     "src": "/Users/evandayton/Downloads/ikariupdatejune11/app/styles/app.css"
   },
   "/Users/evandayton/Downloads/ikariupdatejune11/app/styles/reset.css": {
@@ -15,65 +15,93 @@
     "file": "assets/styles-CP5HafIK.css",
     "src": "/Users/evandayton/Downloads/ikariupdatejune11/node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/styles.css"
   },
-  "_CartMain-B0TYUt4d.js": {
-    "file": "assets/CartMain-B0TYUt4d.js",
-    "name": "CartMain",
+  "_CartLineItem-BLGAawHJ.js": {
+    "file": "assets/CartLineItem-BLGAawHJ.js",
+    "name": "CartLineItem",
     "imports": [
       "_jsx-runtime-0DLF9kdB.js",
-      "_index-Don8BO6t.js",
-      "_ProductPrice-ByvFHxrT.js",
-      "_variants-Dh9eBhrV.js",
-      "_Image-DhFI_Hdi.js",
-      "_components-CZEx2DQX.js",
-      "_Money-DBnmQhIx.js"
+      "_index-ARe_Gc9z.js",
+      "_variants-D7tPq18w.js",
+      "_ProductPrice-Cf0hnqE_.js",
+      "_Image-1BwOa5_f.js",
+      "_components-D1D4g49X.js"
     ]
   },
-  "_Image-DhFI_Hdi.js": {
-    "file": "assets/Image-DhFI_Hdi.js",
+  "_Image-1BwOa5_f.js": {
+    "file": "assets/Image-1BwOa5_f.js",
     "name": "Image",
     "imports": [
       "_jsx-runtime-0DLF9kdB.js",
-      "_components-CZEx2DQX.js"
+      "_index-tHycW7fo.js"
     ]
   },
-  "_Money-DBnmQhIx.js": {
-    "file": "assets/Money-DBnmQhIx.js",
+  "_Money-CWQ7TuYK.js": {
+    "file": "assets/Money-CWQ7TuYK.js",
     "name": "Money",
     "imports": [
       "_jsx-runtime-0DLF9kdB.js",
-      "_components-CZEx2DQX.js"
+      "_index-tHycW7fo.js"
     ]
   },
-  "_Nav-C0ixbBTD.js": {
-    "file": "assets/Nav-C0ixbBTD.js",
+  "_Nav-D7WbOZkH.js": {
+    "file": "assets/Nav-D7WbOZkH.js",
     "name": "Nav",
     "imports": [
       "_jsx-runtime-0DLF9kdB.js",
-      "_components-CZEx2DQX.js"
+      "_index-tHycW7fo.js",
+      "_components-D1D4g49X.js"
     ]
   },
-  "_ProductPrice-ByvFHxrT.js": {
-    "file": "assets/ProductPrice-ByvFHxrT.js",
+  "_ParticleEffect-26Nix6rt.js": {
+    "file": "assets/ParticleEffect-26Nix6rt.js",
+    "name": "ParticleEffect",
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_index-tHycW7fo.js",
+      "_events-776716bd.esm-55ObBn4P.js",
+      "_three.module-0JafEzhq.js"
+    ]
+  },
+  "_ProductPrice-Cf0hnqE_.js": {
+    "file": "assets/ProductPrice-Cf0hnqE_.js",
     "name": "ProductPrice",
     "imports": [
       "_jsx-runtime-0DLF9kdB.js",
-      "_components-CZEx2DQX.js",
-      "_Money-DBnmQhIx.js"
+      "_index-tHycW7fo.js",
+      "_Money-CWQ7TuYK.js"
     ]
   },
-  "_client-CTP82fRV.js": {
-    "file": "assets/client-CTP82fRV.js",
+  "_Texture-DF4phqj4.js": {
+    "file": "assets/Texture-DF4phqj4.js",
+    "name": "Texture",
+    "imports": [
+      "_index-tHycW7fo.js",
+      "_three.module-0JafEzhq.js",
+      "_events-776716bd.esm-55ObBn4P.js"
+    ]
+  },
+  "_client-DoVaOqjc.js": {
+    "file": "assets/client-DoVaOqjc.js",
     "name": "client",
     "isDynamicEntry": true,
     "imports": [
-      "_components-CZEx2DQX.js"
+      "_index-Bveo9Mc3.js"
     ]
   },
-  "_components-CZEx2DQX.js": {
-    "file": "assets/components-CZEx2DQX.js",
+  "_components-D1D4g49X.js": {
+    "file": "assets/components-D1D4g49X.js",
     "name": "components",
-    "isDynamicEntry": true,
     "imports": [
+      "_index-tHycW7fo.js",
+      "_index-Bveo9Mc3.js"
+    ]
+  },
+  "_events-776716bd.esm-55ObBn4P.js": {
+    "file": "assets/events-776716bd.esm-55ObBn4P.js",
+    "name": "events-776716bd.esm",
+    "imports": [
+      "_three.module-0JafEzhq.js",
+      "_index-tHycW7fo.js",
       "_jsx-runtime-0DLF9kdB.js"
     ]
   },
@@ -84,16 +112,32 @@
       "assets/favicon-DZkC1E9c.svg"
     ]
   },
-  "_index-Don8BO6t.js": {
-    "file": "assets/index-Don8BO6t.js",
+  "_index-ARe_Gc9z.js": {
+    "file": "assets/index-ARe_Gc9z.js",
     "name": "index",
     "imports": [
       "_preload-helper-ckwbz45p.js",
-      "_components-CZEx2DQX.js",
-      "_jsx-runtime-0DLF9kdB.js"
+      "_index-tHycW7fo.js",
+      "_jsx-runtime-0DLF9kdB.js",
+      "_components-D1D4g49X.js"
     ],
     "dynamicImports": [
       "node_modules/@shopify/hydrogen/dist/production/log-seo-tags-TY72EQWZ.js"
+    ]
+  },
+  "_index-Bveo9Mc3.js": {
+    "file": "assets/index-Bveo9Mc3.js",
+    "name": "index",
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js"
+    ]
+  },
+  "_index-tHycW7fo.js": {
+    "file": "assets/index-tHycW7fo.js",
+    "name": "index",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js"
     ]
   },
   "_jsx-runtime-0DLF9kdB.js": {
@@ -104,82 +148,176 @@
     "file": "assets/preload-helper-ckwbz45p.js",
     "name": "preload-helper"
   },
-  "_react-three-fiber.esm-B63sD3nm.js": {
-    "file": "assets/react-three-fiber.esm-B63sD3nm.js",
-    "name": "react-three-fiber.esm",
-    "isDynamicEntry": true,
-    "imports": [
-      "_components-CZEx2DQX.js",
-      "_jsx-runtime-0DLF9kdB.js"
-    ]
-  },
-  "_scroll-restoration-CwS7BImC.js": {
-    "file": "assets/scroll-restoration-CwS7BImC.js",
+  "_scroll-restoration-BRjw-S_-.js": {
+    "file": "assets/scroll-restoration-BRjw-S_-.js",
     "name": "scroll-restoration",
     "imports": [
-      "_components-CZEx2DQX.js"
+      "_components-D1D4g49X.js",
+      "_index-tHycW7fo.js"
     ]
   },
-  "_variants-Dh9eBhrV.js": {
-    "file": "assets/variants-Dh9eBhrV.js",
+  "_search-DOeYwaXi.js": {
+    "file": "assets/search-DOeYwaXi.js",
+    "name": "search"
+  },
+  "_three.module-0JafEzhq.js": {
+    "file": "assets/three.module-0JafEzhq.js",
+    "name": "three.module",
+    "isDynamicEntry": true
+  },
+  "_useAnimations-C_NKsBpu.js": {
+    "file": "assets/useAnimations-C_NKsBpu.js",
+    "name": "useAnimations",
+    "imports": [
+      "_index-tHycW7fo.js",
+      "_three.module-0JafEzhq.js",
+      "_events-776716bd.esm-55ObBn4P.js"
+    ]
+  },
+  "_variants-D7tPq18w.js": {
+    "file": "assets/variants-D7tPq18w.js",
     "name": "variants",
     "imports": [
-      "_components-CZEx2DQX.js"
+      "_index-tHycW7fo.js",
+      "_components-D1D4g49X.js"
+    ]
+  },
+  "app/assets/aot.glb": {
+    "file": "assets/aot-BUxGyo1D.glb",
+    "src": "app/assets/aot.glb"
+  },
+  "app/assets/favicon.svg": {
+    "file": "assets/favicon-DZkC1E9c.svg",
+    "src": "app/assets/favicon.svg"
+  },
+  "app/assets/gothiccross.glb": {
+    "file": "assets/gothiccross-Chh7v63c.glb",
+    "src": "app/assets/gothiccross.glb"
+  },
+  "app/assets/hunterxhunter.glb": {
+    "file": "assets/hunterxhunter-KtK3rlvq.glb",
+    "src": "app/assets/hunterxhunter.glb"
+  },
+  "app/assets/jet.glb": {
+    "file": "assets/jet-DDCwoC8h.glb",
+    "src": "app/assets/jet.glb"
+  },
+  "app/assets/jiren.glb": {
+    "file": "assets/jiren-CtS4KNyG.glb",
+    "src": "app/assets/jiren.glb"
+  },
+  "app/assets/naruto.glb": {
+    "file": "assets/naruto-yzgXUv-1.glb",
+    "src": "app/assets/naruto.glb"
+  },
+  "app/assets/soccer.glb": {
+    "file": "assets/soccer-DzXR1tZg.glb",
+    "src": "app/assets/soccer.glb"
+  },
+  "app/assets/sololeveling.glb": {
+    "file": "assets/sololeveling-B1kE3014.glb",
+    "src": "app/assets/sololeveling.glb"
+  },
+  "app/assets/starwars.glb": {
+    "file": "assets/starwars-C1f6U9Bu.glb",
+    "src": "app/assets/starwars.glb"
+  },
+  "app/components/CartRevalidator.client.jsx": {
+    "file": "assets/CartRevalidator.client-C5CKpbCe.js",
+    "name": "CartRevalidator.client",
+    "src": "app/components/CartRevalidator.client.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_index-tHycW7fo.js",
+      "_components-D1D4g49X.js",
+      "_jsx-runtime-0DLF9kdB.js",
+      "_index-Bveo9Mc3.js"
+    ]
+  },
+  "app/components/GlobalParticles.client.jsx": {
+    "file": "assets/GlobalParticles.client-CfpO_AMt.js",
+    "name": "GlobalParticles.client",
+    "src": "app/components/GlobalParticles.client.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_index-tHycW7fo.js",
+      "node_modules/@react-three/fiber/dist/react-three-fiber.esm.js",
+      "_ParticleEffect-26Nix6rt.js",
+      "_events-776716bd.esm-55ObBn4P.js",
+      "_three.module-0JafEzhq.js"
     ]
   },
   "app/components/ProductScene.client.jsx": {
-    "file": "assets/ProductScene.client-B5bgs-fn.js",
+    "file": "assets/ProductScene.client-BwG6O5-o.js",
     "name": "ProductScene.client",
     "src": "app/components/ProductScene.client.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-0DLF9kdB.js",
-      "_components-CZEx2DQX.js",
-      "_react-three-fiber.esm-B63sD3nm.js"
+      "_index-tHycW7fo.js",
+      "node_modules/@react-three/fiber/dist/react-three-fiber.esm.js",
+      "_three.module-0JafEzhq.js",
+      "_Texture-DF4phqj4.js",
+      "_events-776716bd.esm-55ObBn4P.js"
     ]
   },
   "app/components/ThreeHero.client.jsx": {
-    "file": "assets/ThreeHero.client-6qWeGvp5.js",
+    "file": "assets/ThreeHero.client-DTtN8AVl.js",
     "name": "ThreeHero.client",
     "src": "app/components/ThreeHero.client.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-0DLF9kdB.js",
-      "_components-CZEx2DQX.js",
-      "_react-three-fiber.esm-B63sD3nm.js"
+      "_index-tHycW7fo.js",
+      "node_modules/@react-three/fiber/dist/react-three-fiber.esm.js",
+      "_ParticleEffect-26Nix6rt.js",
+      "_events-776716bd.esm-55ObBn4P.js",
+      "_useAnimations-C_NKsBpu.js",
+      "_three.module-0JafEzhq.js"
     ]
   },
   "app/entry.client.jsx": {
-    "file": "assets/entry.client-vU6HjQtI.js",
+    "file": "assets/entry.client-CCypzE5H.js",
     "name": "entry.client",
     "src": "app/entry.client.jsx",
     "isEntry": true,
     "imports": [
       "_jsx-runtime-0DLF9kdB.js",
-      "_components-CZEx2DQX.js",
-      "_client-CTP82fRV.js"
+      "_index-tHycW7fo.js",
+      "_client-DoVaOqjc.js",
+      "_components-D1D4g49X.js",
+      "_index-Bveo9Mc3.js"
     ]
   },
   "app/root.jsx?__remix-build-client-route": {
-    "file": "assets/root-DVlOdu-_.js",
+    "file": "assets/root-jNiM3daX.js",
     "name": "root",
     "src": "app/root.jsx?__remix-build-client-route",
     "isEntry": true,
     "imports": [
+      "_preload-helper-ckwbz45p.js",
       "_jsx-runtime-0DLF9kdB.js",
-      "_components-CZEx2DQX.js",
-      "_ProductPrice-ByvFHxrT.js",
-      "_CartMain-B0TYUt4d.js",
-      "_index-Don8BO6t.js",
-      "_scroll-restoration-CwS7BImC.js",
-      "_Money-DBnmQhIx.js",
-      "_variants-Dh9eBhrV.js",
-      "_Image-DhFI_Hdi.js",
-      "_preload-helper-ckwbz45p.js"
+      "_index-tHycW7fo.js",
+      "_ProductPrice-Cf0hnqE_.js",
+      "_Nav-D7WbOZkH.js",
+      "_index-ARe_Gc9z.js",
+      "_CartLineItem-BLGAawHJ.js",
+      "_Money-CWQ7TuYK.js",
+      "_components-D1D4g49X.js",
+      "_search-DOeYwaXi.js",
+      "_Image-1BwOa5_f.js",
+      "_scroll-restoration-BRjw-S_-.js",
+      "_variants-D7tPq18w.js",
+      "_index-Bveo9Mc3.js"
+    ],
+    "dynamicImports": [
+      "app/components/CartRevalidator.client.jsx",
+      "app/components/GlobalParticles.client.jsx"
     ],
     "assets": [
       "assets/reset-BKioPaen.css",
-      "assets/app-Bv0Oluef.css"
+      "assets/app-BRNfoHGN.css"
     ]
   },
   "app/routes/($locale).cart.$lines.jsx?__remix-build-client-route": {
@@ -189,50 +327,70 @@
     "isEntry": true
   },
   "app/routes/($locale).cart.jsx?__remix-build-client-route": {
-    "file": "assets/(_locale).cart-BAcMz5ko.js",
+    "file": "assets/(_locale).cart-qSaNKkZe.js",
     "name": "(_locale).cart",
     "src": "app/routes/($locale).cart.jsx?__remix-build-client-route",
     "isEntry": true,
     "imports": [
       "_jsx-runtime-0DLF9kdB.js",
-      "_CartMain-B0TYUt4d.js",
-      "_components-CZEx2DQX.js",
-      "_index-Don8BO6t.js",
+      "_index-ARe_Gc9z.js",
+      "_CartLineItem-BLGAawHJ.js",
+      "_components-D1D4g49X.js",
+      "_Money-CWQ7TuYK.js",
       "_preload-helper-ckwbz45p.js",
-      "_ProductPrice-ByvFHxrT.js",
-      "_Money-DBnmQhIx.js",
-      "_variants-Dh9eBhrV.js",
-      "_Image-DhFI_Hdi.js"
+      "_index-tHycW7fo.js",
+      "_variants-D7tPq18w.js",
+      "_ProductPrice-Cf0hnqE_.js",
+      "_Image-1BwOa5_f.js",
+      "_index-Bveo9Mc3.js"
     ]
   },
   "app/routes/($locale).catalog.jsx?__remix-build-client-route": {
-    "file": "assets/(_locale).catalog-BLVzkGf5.js",
+    "file": "assets/(_locale).catalog-v5i3JtBo.js",
     "name": "(_locale).catalog",
     "src": "app/routes/($locale).catalog.jsx?__remix-build-client-route",
     "isEntry": true,
     "imports": [
       "_preload-helper-ckwbz45p.js",
       "_jsx-runtime-0DLF9kdB.js",
-      "_components-CZEx2DQX.js",
-      "_Nav-C0ixbBTD.js"
+      "_index-tHycW7fo.js",
+      "_Nav-D7WbOZkH.js",
+      "_components-D1D4g49X.js",
+      "_index-Bveo9Mc3.js"
     ],
     "dynamicImports": [
-      "_react-three-fiber.esm-B63sD3nm.js",
-      "_client-CTP82fRV.js",
-      "_components-CZEx2DQX.js"
+      "_three.module-0JafEzhq.js",
+      "node_modules/@react-three/fiber/dist/react-three-fiber.esm.js",
+      "node_modules/@react-three/drei/index.js",
+      "_client-DoVaOqjc.js",
+      "_index-tHycW7fo.js"
+    ],
+    "assets": [
+      "assets/aot-BUxGyo1D.glb",
+      "assets/favicon-DZkC1E9c.svg",
+      "assets/gothiccross-Chh7v63c.glb",
+      "assets/hunterxhunter-KtK3rlvq.glb",
+      "assets/jet-DDCwoC8h.glb",
+      "assets/jiren-CtS4KNyG.glb",
+      "assets/naruto-yzgXUv-1.glb",
+      "assets/soccer-DzXR1tZg.glb",
+      "assets/sololeveling-B1kE3014.glb",
+      "assets/starwars-C1f6U9Bu.glb"
     ]
   },
   "app/routes/($locale).collections.$handle.jsx?__remix-build-client-route": {
-    "file": "assets/(_locale).collections._handle-D12yGoFA.js",
+    "file": "assets/(_locale).collections._handle-C-SvB070.js",
     "name": "(_locale).collections._handle",
     "src": "app/routes/($locale).collections.$handle.jsx?__remix-build-client-route",
     "isEntry": true,
     "imports": [
       "_jsx-runtime-0DLF9kdB.js",
-      "_variants-Dh9eBhrV.js",
-      "_components-CZEx2DQX.js",
-      "_Image-DhFI_Hdi.js",
-      "_Money-DBnmQhIx.js"
+      "_variants-D7tPq18w.js",
+      "_components-D1D4g49X.js",
+      "_Image-1BwOa5_f.js",
+      "_Money-CWQ7TuYK.js",
+      "_index-tHycW7fo.js",
+      "_index-Bveo9Mc3.js"
     ]
   },
   "app/routes/($locale).collections._index.jsx?__remix-build-client-route": {
@@ -257,64 +415,116 @@
     "isEntry": true
   },
   "app/routes/($locale).products.$handle.jsx?__remix-build-client-route": {
-    "file": "assets/(_locale).products._handle-gZ1afSkV.js",
+    "file": "assets/(_locale).products._handle-CBBTqVFM.js",
     "name": "(_locale).products._handle",
     "src": "app/routes/($locale).products.$handle.jsx?__remix-build-client-route",
     "isEntry": true,
     "imports": [
       "_preload-helper-ckwbz45p.js",
       "_jsx-runtime-0DLF9kdB.js",
-      "_components-CZEx2DQX.js",
-      "_index-Don8BO6t.js",
-      "_ProductPrice-ByvFHxrT.js",
-      "_Money-DBnmQhIx.js"
+      "_index-tHycW7fo.js",
+      "_index-ARe_Gc9z.js",
+      "_ProductPrice-Cf0hnqE_.js",
+      "_components-D1D4g49X.js",
+      "_Money-CWQ7TuYK.js",
+      "_index-Bveo9Mc3.js"
     ],
     "dynamicImports": [
       "app/components/ProductScene.client.jsx"
     ]
   },
   "app/routes/($locale).search.jsx?__remix-build-client-route": {
-    "file": "assets/(_locale).search-L60BFzhR.js",
+    "file": "assets/(_locale).search-Bsv0ZIN7.js",
     "name": "(_locale).search",
     "src": "app/routes/($locale).search.jsx?__remix-build-client-route",
     "isEntry": true,
     "imports": [
       "_jsx-runtime-0DLF9kdB.js",
-      "_index-Don8BO6t.js",
-      "_components-CZEx2DQX.js",
-      "_Image-DhFI_Hdi.js",
-      "_Money-DBnmQhIx.js",
-      "_preload-helper-ckwbz45p.js"
+      "_index-ARe_Gc9z.js",
+      "_index-tHycW7fo.js",
+      "_components-D1D4g49X.js",
+      "_search-DOeYwaXi.js",
+      "_Image-1BwOa5_f.js",
+      "_Money-CWQ7TuYK.js",
+      "_preload-helper-ckwbz45p.js",
+      "_index-Bveo9Mc3.js"
     ]
   },
   "app/routes/($locale).shop.jsx?__remix-build-client-route": {
-    "file": "assets/(_locale).shop-kNamTT6W.js",
+    "file": "assets/(_locale).shop-DmfVcXhx.js",
     "name": "(_locale).shop",
     "src": "app/routes/($locale).shop.jsx?__remix-build-client-route",
     "isEntry": true,
     "imports": [
       "_preload-helper-ckwbz45p.js",
       "_jsx-runtime-0DLF9kdB.js",
-      "_components-CZEx2DQX.js"
+      "_index-tHycW7fo.js",
+      "_components-D1D4g49X.js",
+      "_index-Bveo9Mc3.js"
     ],
     "dynamicImports": [
       "app/components/ProductScene.client.jsx"
     ]
   },
   "app/routes/_index.jsx?__remix-build-client-route": {
-    "file": "assets/_index-FrFgav-P.js",
+    "file": "assets/_index-BYWiNXzR.js",
     "name": "_index",
     "src": "app/routes/_index.jsx?__remix-build-client-route",
     "isEntry": true,
     "imports": [
       "_preload-helper-ckwbz45p.js",
       "_jsx-runtime-0DLF9kdB.js",
-      "_components-CZEx2DQX.js",
-      "_Nav-C0ixbBTD.js"
+      "_index-tHycW7fo.js"
     ],
     "dynamicImports": [
       "app/components/ThreeHero.client.jsx",
-      "_client-CTP82fRV.js"
+      "_client-DoVaOqjc.js"
+    ]
+  },
+  "app/routes/contact.jsx?__remix-build-client-route": {
+    "file": "assets/contact-WUVJemQ6.js",
+    "name": "contact",
+    "src": "app/routes/contact.jsx?__remix-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_index-tHycW7fo.js"
+    ]
+  },
+  "app/routes/overview.jsx?__remix-build-client-route": {
+    "file": "assets/overview--d9-qu-e.js",
+    "name": "overview",
+    "src": "app/routes/overview.jsx?__remix-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_jsx-runtime-0DLF9kdB.js",
+      "_index-tHycW7fo.js"
+    ]
+  },
+  "node_modules/@react-three/drei/index.js": {
+    "file": "assets/index-CRgxm7En.js",
+    "name": "index",
+    "src": "node_modules/@react-three/drei/index.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_useAnimations-C_NKsBpu.js",
+      "_Texture-DF4phqj4.js",
+      "_index-tHycW7fo.js",
+      "_three.module-0JafEzhq.js",
+      "_events-776716bd.esm-55ObBn4P.js",
+      "_jsx-runtime-0DLF9kdB.js"
+    ]
+  },
+  "node_modules/@react-three/fiber/dist/react-three-fiber.esm.js": {
+    "file": "assets/react-three-fiber.esm-CM6xbMxr.js",
+    "name": "react-three-fiber.esm",
+    "src": "node_modules/@react-three/fiber/dist/react-three-fiber.esm.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_events-776716bd.esm-55ObBn4P.js",
+      "_index-tHycW7fo.js",
+      "_three.module-0JafEzhq.js",
+      "_jsx-runtime-0DLF9kdB.js"
     ]
   },
   "node_modules/@shopify/hydrogen/dist/production/log-seo-tags-TY72EQWZ.js": {
@@ -329,7 +539,7 @@
   },
   "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/favicon.svg": {
     "file": "assets/favicon-DZkC1E9c.svg",
-    "src": "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/favicon.svg"
+    "src": "app/assets/favicon.svg"
   },
   "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/assets/inter-variable-font.woff2": {
     "file": "assets/inter-variable-font-DNXbu9-7.woff2",
@@ -346,14 +556,16 @@
     "isEntry": true
   },
   "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/routes/index.jsx?__remix-build-client-route": {
-    "file": "assets/index-DVG3Qj5P.js",
+    "file": "assets/index-BpVO_zxc.js",
     "name": "index",
     "src": "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/routes/index.jsx?__remix-build-client-route",
     "isEntry": true,
     "imports": [
       "_jsx-runtime-0DLF9kdB.js",
       "_favicon-CG_43MKL.js",
-      "_components-CZEx2DQX.js"
+      "_components-D1D4g49X.js",
+      "_index-tHycW7fo.js",
+      "_index-Bveo9Mc3.js"
     ],
     "assets": [
       "assets/inter-variable-font-DNXbu9-7.woff2",
@@ -361,16 +573,18 @@
     ]
   },
   "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/routes/subrequest-profiler.jsx?__remix-build-client-route": {
-    "file": "assets/subrequest-profiler-C-g8WKuL.js",
+    "file": "assets/subrequest-profiler-kowc1Wqp.js",
     "name": "subrequest-profiler",
     "src": "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/routes/subrequest-profiler.jsx?__remix-build-client-route",
     "isEntry": true,
     "imports": [
       "_jsx-runtime-0DLF9kdB.js",
-      "_components-CZEx2DQX.js",
-      "_index-Don8BO6t.js",
+      "_index-tHycW7fo.js",
+      "_index-ARe_Gc9z.js",
       "_favicon-CG_43MKL.js",
-      "_preload-helper-ckwbz45p.js"
+      "_components-D1D4g49X.js",
+      "_preload-helper-ckwbz45p.js",
+      "_index-Bveo9Mc3.js"
     ],
     "assets": [
       "assets/favicon-dark-B35gQ1-G.svg",
@@ -378,17 +592,19 @@
     ]
   },
   "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/virtual-root-with-layout.jsx?__remix-build-client-route": {
-    "file": "assets/virtual-root-with-layout-BPiTGFQO.js",
+    "file": "assets/virtual-root-with-layout-AW2_9p0f.js",
     "name": "virtual-root-with-layout",
     "src": "node_modules/@shopify/hydrogen/dist/vite/virtual-routes/virtual-root-with-layout.jsx?__remix-build-client-route",
     "isEntry": true,
     "imports": [
       "_jsx-runtime-0DLF9kdB.js",
       "_favicon-CG_43MKL.js",
-      "_index-Don8BO6t.js",
-      "_components-CZEx2DQX.js",
-      "_scroll-restoration-CwS7BImC.js",
-      "_preload-helper-ckwbz45p.js"
+      "_index-ARe_Gc9z.js",
+      "_components-D1D4g49X.js",
+      "_scroll-restoration-BRjw-S_-.js",
+      "_preload-helper-ckwbz45p.js",
+      "_index-tHycW7fo.js",
+      "_index-Bveo9Mc3.js"
     ],
     "assets": [
       "assets/inter-variable-font-DNXbu9-7.woff2",
