@@ -1,5 +1,6 @@
 // app/routes/_index.jsx
 import React, {useEffect, useState} from 'react';
+import webframeUrl from '/webframe2.png?url';
 
 // ClientOnly guard
 function ClientOnly({children}) {
@@ -21,7 +22,7 @@ export default function Index() {
     >
       {/* frame overlay */}
       <img
-        src="/webframe2.png"
+        src={webframeUrl}
         alt=""
         style={{
           filter: 'invert(100%)',
