@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import '~/assets/preserve-glbs'; // Prevents Vite/Oxygen tree-shaking
-import webframeUrl from '/webframe2.png?url';
 
 // ClientOnly guard
 function ClientOnly({ children }) {
@@ -22,7 +21,7 @@ export default function Index() {
     >
       {/* frame overlay */}
       <img
-        src={webframeUrl}
+        src="/webframe2.png" // ✅ Direct URL — no Vite import
         alt=""
         style={{
           filter: 'invert(100%)',
