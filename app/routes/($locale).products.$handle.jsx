@@ -3,9 +3,6 @@ import {useLoaderData, useNavigate, Link} from '@remix-run/react';
 import {
   getSelectedProductOptions,
   Analytics,
-  useOptimisticVariant,
-  getProductOptions,
-  getAdjacentAndFirstAvailableVariants,
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
@@ -89,17 +86,9 @@ function loadDeferredData() {
 export default function Product() {
   const {product, recommended = [], fallbackProducts = []} = useLoaderData();
 
-  const selectedVariant = useOptimisticVariant(
-    product.selectedOrFirstAvailableVariant,
-    getAdjacentAndFirstAvailableVariants(product),
-  );
+  const selectedVariant = product.selectedOrFirstAvailableVariant;
 
   useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
-
-  const productOptions = getProductOptions({
-    ...product,
-    selectedOrFirstAvailableVariant: selectedVariant,
-  });
 
   const {title, descriptionHtml} = product;
 
@@ -118,8 +107,8 @@ export default function Product() {
 
   // Extract a 'Size' option (if present) for dropdown UX; otherwise single option or none
   const sizeOption = useMemo(() => {
-    return productOptions.find((o) => o.name.toLowerCase() === 'size');
-  }, [productOptions]);
+    return product.options.find((o) => o.name.toLowerCase() === 'size');
+  }, [product.options]);
 
   function onSizeChange(e) {
     const value = e.target.value;
@@ -239,6 +228,7 @@ export default function Product() {
               disabled={!selectedVariant || !selectedVariant.availableForSale}
               onClick={() => open('cart')}
               lines={selectedVariant ? [{merchandiseId: selectedVariant.id, quantity: qty}] : []}
+              selectedVariant={selectedVariant} 
               style={{
                 background:'#ff4d00',
                 color:'#000',
@@ -252,6 +242,7 @@ export default function Product() {
               }}
             >
               {selectedVariant?.availableForSale ? 'Add to Cart' : 'Sold Out'}
+              selectedVariant={selectedVariant}
             </AddToCartButton>
             <LikeButton productId={product.id} />
           </div>
