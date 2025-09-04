@@ -3,6 +3,9 @@ import {useLoaderData, useNavigate, Link} from '@remix-run/react';
 import {
   getSelectedProductOptions,
   Analytics,
+  useOptimisticVariant,
+  getProductOptions,
+  getAdjacentAndFirstAvailableVariants,
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
@@ -47,7 +50,6 @@ async function loadCriticalData({context, params, request}) {
 
   redirectIfHandleIsLocalized(request, {handle, data: product});
 
-  // Fetch recommendations (best-effort)
   let recommended = [];
   try {
     const rec = await storefront.query(RECOMMENDED_QUERY, {
@@ -58,8 +60,6 @@ async function loadCriticalData({context, params, request}) {
     console.error('Recommendations query failed', e);
   }
 
-  // Fallback: if no recommendations and product has no collection siblings,
-  // fetch a generic set of products to populate the carousel.
   let fallbackProducts = [];
   const firstCollection = product?.collections?.nodes?.[0];
   const collectionSiblings = firstCollection?.products?.nodes?.filter((p) => p.id !== product.id) || [];
@@ -86,9 +86,17 @@ function loadDeferredData() {
 export default function Product() {
   const {product, recommended = [], fallbackProducts = []} = useLoaderData();
 
-  const selectedVariant = product.selectedOrFirstAvailableVariant;
+  const selectedVariant = useOptimisticVariant(
+    product.selectedOrFirstAvailableVariant,
+    getAdjacentAndFirstAvailableVariants(product),
+  );
 
   useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
+
+  const productOptions = getProductOptions({
+    ...product,
+    selectedOrFirstAvailableVariant: selectedVariant,
+  });
 
   const {title, descriptionHtml} = product;
 
@@ -105,10 +113,9 @@ export default function Product() {
     userSelect: 'none',
   };
 
-  // Extract a 'Size' option (if present) for dropdown UX; otherwise single option or none
   const sizeOption = useMemo(() => {
-    return product.options.find((o) => o.name.toLowerCase() === 'size');
-  }, [product.options]);
+    return productOptions.find((o) => o.name.toLowerCase() === 'size');
+  }, [productOptions]);
 
   function onSizeChange(e) {
     const value = e.target.value;
@@ -117,7 +124,6 @@ export default function Product() {
     const target = option.optionValues.find((v) => v.name === value);
     if (target && target.exists) {
       if (target.isDifferentProduct) {
-        // Navigate to another combined-listing product
         navigate(`/products/${target.handle}?${target.variantUriQuery}`, {
           replace: true,
           preventScrollReset: true,
@@ -149,7 +155,6 @@ export default function Product() {
         zIndex: 2,
       }}
     >
-      {/* Back control */}
       <button
         onClick={() => (window.history.length > 1 ? window.history.back() : navigate('/shop'))}
         style={{
@@ -158,7 +163,7 @@ export default function Product() {
           padding: '.5rem .75rem', borderRadius: 8, cursor:'pointer'
         }}
       >← Back</button>
-      {/* Left: 3D panel */}
+
       <div style={{border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '1rem', background: '#0d0d0d', position:'relative', overflow:'hidden', zIndex:1}}>
         <div style={{width: '100%', aspectRatio: aspect, maxHeight: isPortrait ? '66vh' : '78vh'}}>
           <Suspense fallback={<div style={{padding: '2rem', color: '#888'}}>Loading…</div>}>
@@ -171,7 +176,6 @@ export default function Product() {
         </div>
       </div>
 
-      {/* Right: details */}
       <div style={{padding: '0 0.5rem', position: 'relative', zIndex: 3, pointerEvents:'auto'}}>
         <h1 style={{
           margin: 0,
@@ -189,7 +193,6 @@ export default function Product() {
           />
         </div>
 
-        {/* Controls: quantity + size + add to cart + like */}
         <div style={{
           marginTop: '1rem',
           padding: '1rem',
@@ -197,17 +200,17 @@ export default function Product() {
           borderRadius: '10px',
           background: 'rgba(255,255,255,0.02)',
         }}>
-          {/* Quantity */}
           <div style={{display: 'flex', alignItems: 'center', gap: '.75rem'}}>
             <div style={{opacity: 0.7, fontSize: '.85rem', width: 72}}>Quantity</div>
             <div style={{display:'inline-flex', alignItems:'center', border:'1px solid rgba(255,255,255,0.2)', borderRadius: 8}}>
-              <button type="button" onClick={() => setQty((q) => Math.max(1, q-1))} style={stepBtn}>−</button>
-              <div style={{minWidth: 36, textAlign:'center'}}>{qty}</div>
-              <button type="button" onClick={() => setQty((q) => q+1)} style={stepBtn}>+</button>
+              <button
+                type="button"
+                onClick={() => setQty((q) => q + 1)}
+                style={stepBtn}
+              >+</button>
             </div>
           </div>
 
-          {/* Size dropdown (optional) */}
           {sizeOption ? (
             <div style={{display:'flex', alignItems:'center', gap: '.75rem', marginTop: '0.75rem'}}>
               <div style={{opacity: 0.7, fontSize: '.85rem', width: 72}}>Size</div>
@@ -222,33 +225,44 @@ export default function Product() {
             </div>
           ) : null}
 
-          {/* CTA row */}
           <div style={{display:'flex', gap: '0.75rem', marginTop: '0.9rem', alignItems:'center'}}>
-            <AddToCartButton
-              disabled={!selectedVariant || !selectedVariant.availableForSale}
-              onClick={() => open('cart')}
-              lines={selectedVariant ? [{merchandiseId: selectedVariant.id, quantity: qty}] : []}
-              selectedVariant={selectedVariant} 
-              style={{
-                background:'#ff4d00',
-                color:'#000',
-                border:'1px solid #ff864d',
-                padding:'0.9rem 1.25rem',
-                borderRadius: '10px',
-                fontWeight: 700,
-                letterSpacing: '.08em',
-                textTransform: 'uppercase',
-                cursor:'pointer', position:'relative', zIndex:50,
-              }}
-            >
-              {selectedVariant?.availableForSale ? 'Add to Cart' : 'Sold Out'}
-              selectedVariant={selectedVariant}
-            </AddToCartButton>
+            {selectedVariant?.id ? (
+              <AddToCartButton
+                disabled={!selectedVariant.availableForSale}
+                onClick={() => open('cart')}
+                lines={[{ merchandiseId: selectedVariant.id, quantity: qty }]}
+                selectedVariant={selectedVariant}
+                style={{
+                  background:'#ff4d00',
+                  color:'#000',
+                  border:'1px solid #ff864d',
+                  padding:'0.9rem 1.25rem',
+                  borderRadius: '10px',
+                  fontWeight: 700,
+                  letterSpacing: '.08em',
+                  textTransform: 'uppercase',
+                  cursor:'pointer', position:'relative', zIndex:50,
+                }}
+              >
+                {selectedVariant.availableForSale ? 'Add to Cart' : 'Sold Out'}
+              </AddToCartButton>
+            ) : (
+              <button
+                disabled
+                style={{
+                  background:'#333',
+                  color:'#888',
+                  padding:'0.9rem 1.25rem',
+                  borderRadius:'10px',
+                }}
+              >
+                Loading…
+              </button>
+            )}
             <LikeButton productId={product.id} />
           </div>
         </div>
 
-        {/* Accordions */}
         <Accordion label="Description" defaultOpen>
           <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
         </Accordion>
@@ -278,7 +292,7 @@ export default function Product() {
           ],
         }}
       />
-      {/* You may also like */}
+
       <div style={{gridColumn: '1 / -1', marginTop: '2rem'}}>
         <YouMayAlsoLike product={product} recommended={recommended} fallback={fallbackProducts} />
       </div>
@@ -331,16 +345,13 @@ function LikeButton({productId}) {
 }
 
 function YouMayAlsoLike({product, recommended, fallback = []}) {
-  // Build a pool: recommendations -> collection siblings -> fallback
   const rec = Array.isArray(recommended) ? recommended : [];
   const coll = (product?.collections?.nodes?.[0]?.products?.nodes || []).filter((p) => p.id !== product.id);
   const pool = [...rec, ...coll, ...fallback];
-  // Dedupe by id
   const seen = new Set();
   const unique = pool.filter((p) => (p && !seen.has(p.id) && seen.add(p.id)));
   if (!unique.length) return null;
 
-  // Pick exactly 8 items, randomized; if fewer exist, cycle to fill 8
   const EIGHT = 8;
   const shuffled = [...unique].sort(() => Math.random() - 0.5);
   let items = shuffled.slice(0, Math.min(EIGHT, shuffled.length));
@@ -349,17 +360,17 @@ function YouMayAlsoLike({product, recommended, fallback = []}) {
   }
 
   const listRef = React.useRef(null);
-  const CARD_W = 260; // px
-  const GAP_REM = 2.25; // more breathing room between paintings
-  const GAP_PX = 36; // ~2.25rem @16px base
+  const CARD_W = 260; 
+  const GAP_REM = 2.25; 
+  const GAP_PX = 36; 
   const MAX_VISIBLE = 4;
-  const STEP = (CARD_W + GAP_PX) * 2; // scroll 2 cards per click
+
   const scrollBy = (dir) => {
     const el = listRef.current; if (!el) return;
     const first = el.firstElementChild;
     const gap = parseFloat(getComputedStyle(el).columnGap || '0') || GAP_PX;
     const w = first ? first.getBoundingClientRect().width : CARD_W;
-    const step = (w + gap) * 2; // two cards per click
+    const step = (w + gap) * 2; 
     el.scrollBy({left: dir * step, behavior: 'smooth'});
   };
 
@@ -374,13 +385,12 @@ function YouMayAlsoLike({product, recommended, fallback = []}) {
     <div style={{padding: '1.25rem 0', borderTop: '1px solid rgba(255,255,255,0.08)'}}>
       <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: '.75rem'}}>
         <div style={{textTransform:'uppercase', letterSpacing:'.14em', fontSize:'.85rem', opacity:0.85}}>You may also like</div>
-        {/* inline arrows removed; overlay arrows added below */}
       </div>
       <div style={{
         position:'relative',
         maxWidth: `calc(${CARD_W}px * ${MAX_VISIBLE} + ${GAP_REM}rem * ${MAX_VISIBLE - 1})`,
         margin: '0 auto',
-        padding: '0 3.25rem', // keep arrows a fixed offset from the carousel
+        padding: '0 3.25rem',
         boxSizing: 'content-box',
       }}>
         <div
@@ -411,7 +421,6 @@ function YouMayAlsoLike({product, recommended, fallback = []}) {
             </a>
           ))}
         </div>
-        {/* Overlay arrows */}
         <button type="button" aria-label="Scroll left" onClick={() => scrollBy(-1)} style={{...overlayArrow, left: '0.5rem'}}>←</button>
         <button type="button" aria-label="Scroll right" onClick={() => scrollBy(1)} style={{...overlayArrow, right: '0.5rem'}}>→</button>
       </div>
