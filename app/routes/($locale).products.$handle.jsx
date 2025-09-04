@@ -241,8 +241,18 @@ export default function Product() {
               lines={selectedVariant ? [{
                 merchandiseId: selectedVariant.id,
                 quantity: qty,
-                // Provide variant data for optimistic cart (required by Hydrogen)
-                selectedVariant: selectedVariant
+                attributes: [],
+                merchandise: {
+                  id: selectedVariant.id,
+                  title: selectedVariant.title,
+                  selectedOptions: selectedVariant.selectedOptions,
+                  product: {
+                    id: product.id,
+                    title: product.title,
+                    handle: product.handle,
+                    vendor: product.vendor
+                  }
+                }
               }] : []}
               style={{
                 background:'#ff4d00',

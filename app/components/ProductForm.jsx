@@ -106,8 +106,6 @@ export function ProductForm({productOptions, selectedVariant}) {
                 {
                   merchandiseId: selectedVariant.id,
                   quantity: 1,
-                  // Provide variant data for optimistic cart (required by Hydrogen)
-                  selectedVariant: selectedVariant,
                 },
               ]
             : []
