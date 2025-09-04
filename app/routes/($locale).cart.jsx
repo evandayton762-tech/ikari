@@ -19,6 +19,13 @@ export async function action({request, context}) {
 
   try {
     const {action, inputs} = CartForm.getFormInput(formData);
+    
+    // Enhanced debugging
+    console.log('[Cart Action]', {
+      action,
+      inputs: JSON.stringify(inputs, null, 2),
+      timestamp: new Date().toISOString()
+    });
 
     if (!action) {
       throw new Error('No action provided');
@@ -29,7 +36,23 @@ export async function action({request, context}) {
         if (!Array.isArray(inputs?.lines) || inputs.lines.length === 0) {
           throw new Error('LinesAdd requires at least one line');
         }
-        result = await cart.addLines(inputs.lines);
+        
+        // Validate line items before sending to API
+        const validLines = inputs.lines.map(line => {
+          if (!line.merchandiseId) {
+            throw new Error('Missing merchandiseId in line item');
+          }
+          return {
+            merchandiseId: line.merchandiseId,
+            quantity: line.quantity || 1,
+            // Only include additional properties that Shopify expects
+            ...(line.attributes && { attributes: line.attributes }),
+          };
+        });
+        
+        console.log('[Cart] Adding lines:', JSON.stringify(validLines, null, 2));
+        result = await cart.addLines(validLines);
+        console.log('[Cart] Add result:', JSON.stringify(result, null, 2));
         break;
       }
       case CartForm.ACTIONS.LinesUpdate: {
@@ -64,7 +87,12 @@ export async function action({request, context}) {
         throw new Error(`${action} cart action is not defined`);
     }
   } catch (err) {
-    if (debug) console.error('[cart.action] error', err);
+    console.error('[Cart Action Error]', {
+      error: err?.message || String(err),
+      stack: err?.stack,
+      timestamp: new Date().toISOString()
+    });
+    
     // Surface a safe error payload for fetcher clients
     return data(
       {
