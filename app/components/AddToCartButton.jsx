@@ -20,11 +20,16 @@ export function AddToCartButton({
   lines,
   onClick,
   className,
+  selectedVariant,
   style,
   redirectTo,
 }) {
   return (
-    <CartForm route="/cart" inputs={{lines}} action={CartForm.ACTIONS.LinesAdd}>
+      <CartForm
+        route="/cart"
+        action={CartForm.ACTIONS.LinesAdd}
+        inputs={{ lines, selectedVariant }}   // ⭐ forward it
+      >
       {(fetcher) => {
         // Debug logging (only on state changes)
         if (typeof window !== 'undefined' && fetcher.state !== 'idle') {
