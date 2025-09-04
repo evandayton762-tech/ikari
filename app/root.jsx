@@ -14,6 +14,8 @@ import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 import resetUrl from '~/styles/reset.css?url';
 import appUrl from '~/styles/app.css?url';
 import faviconUrl from '~/assets/favicon.svg';
+import CartRevalidator from '~/components/CartRevalidator.client';
+
 
 export const links = () => [
   {rel: 'preconnect', href: 'https://cdn.shopify.com'},
@@ -143,6 +145,9 @@ function AppShell({data, location}) {
         invertLogo={location?.pathname !== '/'}
       />
       {/* Hide fixed buttons when an aside is open to avoid overlaying the X close */}
+      <Suspense fallback={null}>
+        <CartRevalidator />
+      </Suspense>
       {asideState?.type === 'closed' && <SearchButton />}
       <React.Suspense fallback={null}>
         <CartRevalidator />
