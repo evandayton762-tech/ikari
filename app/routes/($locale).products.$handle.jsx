@@ -10,6 +10,7 @@ import {
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
 import {AddToCartButton} from '~/components/AddToCartButton';
+import {CanvasDetails, CanvasShipping} from '~/components/PrintifyCanvasDetails';
 // Keep 3D ProductScene primary; show thumbnails as mini-carousel below
 import {useAside} from '~/components/Aside';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
@@ -619,7 +620,6 @@ const ALSO_LIKE_FALLBACK_QUERY = `#graphql
         handle
         featuredImage { url altText width height }
         priceRange { minVariantPrice { amount currencyCode } }
-import {CanvasDetails, CanvasShipping} from '~/components/PrintifyCanvasDetails';
       }
     }
   }
