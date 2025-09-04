@@ -238,7 +238,7 @@ export default function Product() {
             <AddToCartButton
               disabled={!selectedVariant || !selectedVariant.availableForSale}
               onClick={() => open('cart')}
-              lines={selectedVariant ? [{merchandiseId: selectedVariant.id, quantity: qty, selectedVariant}] : []}
+              lines={selectedVariant ? [{merchandiseId: selectedVariant.id, quantity: qty}] : []}
               style={{
                 background:'#ff4d00',
                 color:'#000',
