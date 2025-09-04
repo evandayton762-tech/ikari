@@ -37,7 +37,7 @@ function CartLineItem({line}) {
         {/* quick-add another of the same variant */}
         <AddToCartButton
           lines={[{merchandiseId: line.merchandise.id, quantity: 1}]}
-          selectedVariant={line.merchandise}         {/* ⭐ pass variant */}
+          selectedVariant={line.merchandise}       
           className="quick-add"
         >
           +
