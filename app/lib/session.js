@@ -36,13 +36,18 @@ export class AppSession {
         httpOnly: true,
         path: '/',
         sameSite: 'lax',
+        secure: false, // Allow local development
+        maxAge: 60 * 60 * 24 * 30, // 30 days
         secrets,
       },
     });
 
     const session = await storage
       .getSession(request.headers.get('Cookie'))
-      .catch(() => storage.getSession());
+      .catch((error) => {
+        console.warn('Failed to get session from cookie:', error);
+        return storage.getSession();
+      });
 
     return new this(storage, session);
   }

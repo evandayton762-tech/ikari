@@ -34,7 +34,13 @@ export async function createAppLoadContext(request, env, executionContext) {
     cart: {
       queryFragment: CART_QUERY_FRAGMENT,
       // Ensure cart cookie works in local HTTP dev: disable secure flag
-      cookie: {secure: false, sameSite: 'Lax', path: '/'},
+      cookie: {
+        secure: false, 
+        sameSite: 'Lax', 
+        path: '/',
+        httpOnly: false,
+        maxAge: 60 * 60 * 24 * 30 // 30 days
+      },
     },
   });
 
@@ -46,8 +52,22 @@ export async function createAppLoadContext(request, env, executionContext) {
     setCartId: (id) => {
       try {
         session.set('cartId', id);
-      } catch {}
+      } catch (error) {
+        console.warn('Failed to set cart ID in session:', error);
+      }
       return originalCart.setCartId(id);
+    },
+    async get(...args) {
+      const result = await originalCart.get(...args);
+      // Persist cart ID if we have it
+      if (result?.id && !session.get('cartId')) {
+        try {
+          session.set('cartId', result.id);
+        } catch (error) {
+          console.warn('Failed to persist cart ID:', error);
+        }
+      }
+      return result;
     },
   };
 
