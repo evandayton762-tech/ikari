@@ -238,7 +238,12 @@ export default function Product() {
             <AddToCartButton
               disabled={!selectedVariant || !selectedVariant.availableForSale}
               onClick={() => open('cart')}
-              lines={selectedVariant ? [{merchandiseId: selectedVariant.id, quantity: qty}] : []}
+              lines={selectedVariant ? [{
+                merchandiseId: selectedVariant.id,
+                quantity: qty,
+                // Provide variant data for optimistic cart (required by Hydrogen)
+                merchandise: selectedVariant
+              }] : []}
               style={{
                 background:'#ff4d00',
                 color:'#000',

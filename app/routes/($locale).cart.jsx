@@ -20,12 +20,14 @@ export async function action({request, context}) {
   try {
     const {action, inputs} = CartForm.getFormInput(formData);
     
-    // Enhanced debugging
-    console.log('[Cart Action]', {
-      action,
-      inputs: JSON.stringify(inputs, null, 2),
-      timestamp: new Date().toISOString()
-    });
+    // Enhanced debugging (only in development)
+    if (debug) {
+      console.log('[Cart Action]', {
+        action,
+        inputs: JSON.stringify(inputs, null, 2),
+        timestamp: new Date().toISOString()
+      });
+    }
 
     if (!action) {
       throw new Error('No action provided');
@@ -42,6 +44,8 @@ export async function action({request, context}) {
           if (!line.merchandiseId) {
             throw new Error('Missing merchandiseId in line item');
           }
+          // Only send API-compatible fields to Shopify
+          // (merchandise is used by optimistic cart but not sent to API)
           return {
             merchandiseId: line.merchandiseId,
             quantity: line.quantity || 1,
@@ -50,9 +54,9 @@ export async function action({request, context}) {
           };
         });
         
-        console.log('[Cart] Adding lines:', JSON.stringify(validLines, null, 2));
+        if (debug) console.log('[Cart] Adding lines:', JSON.stringify(validLines, null, 2));
         result = await cart.addLines(validLines);
-        console.log('[Cart] Add result:', JSON.stringify(result, null, 2));
+        if (debug) console.log('[Cart] Add result:', JSON.stringify(result, null, 2));
         break;
       }
       case CartForm.ACTIONS.LinesUpdate: {
