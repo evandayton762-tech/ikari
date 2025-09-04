@@ -29,6 +29,7 @@ export function AddToCartButton({
           className={className}
           style={style}
           disabled={disabled}
+          lines={lines}
           onClick={(e) => {
             try { if (typeof onClick === 'function') onClick(e); } catch {}
             try { flyToCart(e.currentTarget, imageSrc); } catch {}
@@ -41,7 +42,7 @@ export function AddToCartButton({
   );
 }
 
-function SubmitButton({fetcher, children, className, style, disabled, onClick}) {
+function SubmitButton({fetcher, children, className, style, disabled, onClick, lines}) {
   const {open} = useAside();
   const openedRef = React.useRef(false);
 
@@ -63,6 +64,25 @@ function SubmitButton({fetcher, children, className, style, disabled, onClick}) 
       setTimeout(() => {
         openedRef.current = false;
       }, 100);
+    }
+    // Fallback path for environments where mutation fails (e.g., invalid id or cookie issues)
+    const error = fetcher.state === 'idle' && fetcher.data && (!fetcher.data.cart || (fetcher.data.errors && fetcher.data.errors.length));
+    if (error && lines && !openedRef.current) {
+      const href = buildCartLinesHref(lines, true /* includeQty */);
+      if (href) {
+        fetch(`${href}?silent=1`, {method: 'GET'}).then(async (r) => {
+          try {
+            const j = await r.json();
+            if (j?.cart) {
+              if (typeof window !== 'undefined') {
+                window.__lastCart = j.cart;
+                window.dispatchEvent(new CustomEvent('cart:updated', {detail: j.cart}));
+              }
+              open('cart');
+            }
+          } catch {}
+        }).catch(() => {});
+      }
     }
   }, [fetcher?.state, fetcher?.data]);
 
@@ -111,6 +131,23 @@ function flyToCart(sourceEl, imageSrc) {
   setTimeout(() => {
     img.remove();
   }, 700);
+}
+
+function buildCartLinesHref(lines, includeQty=false) {
+  try {
+    if (!Array.isArray(lines) || lines.length === 0) return null;
+    const parts = lines.map((l) => {
+      const id = l?.merchandiseId || l?.variantId || '';
+      const numeric = String(id).split('/').pop();
+      const qty = Math.max(1, Number(l?.quantity || 1));
+      if (!numeric || isNaN(Number(numeric))) return null;
+      return includeQty ? `${numeric}:${qty}` : numeric;
+    });
+    if (parts.some((p) => !p)) return null;
+    return `/cart/${parts.join(',')}`;
+  } catch {
+    return null;
+  }
 }
 
 /**

@@ -299,12 +299,16 @@ export default function Product() {
         </Accordion>
         <Accordion label="Materials">
           <Metafield html={product?.metafield?.value} fallbacks={[product?.metafield_materials?.value]} />
+          {!product?.metafield?.value && !product?.metafield_materials?.value && (
+            <CanvasDetails />
+          )}
         </Accordion>
         <Accordion label="Care & Hanging">
           <Metafield html={product?.metafield_care?.value} />
         </Accordion>
         <Accordion label="Delivery & Returns">
           <Metafield html={product?.metafield_delivery_returns?.value} />
+          {!product?.metafield_delivery_returns?.value && <CanvasShipping />}
         </Accordion>
       </div>
 
@@ -615,6 +619,7 @@ const ALSO_LIKE_FALLBACK_QUERY = `#graphql
         handle
         featuredImage { url altText width height }
         priceRange { minVariantPrice { amount currencyCode } }
+import {CanvasDetails, CanvasShipping} from '~/components/PrintifyCanvasDetails';
       }
     }
   }

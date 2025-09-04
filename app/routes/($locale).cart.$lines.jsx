@@ -1,4 +1,4 @@
-import {redirect} from '@shopify/remix-oxygen';
+import {redirect, json} from '@shopify/remix-oxygen';
 
 /**
  * Automatically creates a new cart based on the URL and redirects straight to checkout.
@@ -51,6 +51,12 @@ export async function loader({params, context, request}) {
   const headers = cart.setCartId(cartResult.id);
 
   // On success go to checkout url.
+  const url2 = new URL(request.url);
+  const silent = url2.searchParams.get('silent');
+  if (silent) {
+    // Return JSON so clients can open aside without navigation
+    return json({ok: true, cart: cartResult}, {headers});
+  }
   // Redirect to the cart page so the user can review items
   return redirect('/cart', {headers});
 }
