@@ -1,5 +1,4 @@
 import React from 'react';
-import {CartForm} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
 // Minimal, robust add-to-cart. If possible, use the direct /cart/$lines route
 // to avoid any client/runtime issues.
@@ -16,87 +15,56 @@ export function AddToCartButton({
   redirectTo,
   imageSrc,
 }) {
-  // Always use CartForm so we can stay on page and open the aside.
   return (
-    <CartForm
-      route="/cart"
-      action={CartForm.ACTIONS.LinesAdd}
-      inputs={{lines}}
+    <DirectAddButton
+      className={className}
+      style={style}
+      disabled={disabled}
+      lines={lines}
+      imageSrc={imageSrc}
+      onClick={onClick}
     >
-      {(fetcher) => (
-        <SubmitButton
-          fetcher={fetcher}
-          className={className}
-          style={style}
-          disabled={disabled}
-          lines={lines}
-          onClick={(e) => {
-            try { if (typeof onClick === 'function') onClick(e); } catch {}
-            try { flyToCart(e.currentTarget, imageSrc); } catch {}
-          }}
-        >
-          {children}
-        </SubmitButton>
-      )}
-    </CartForm>
+      {children}
+    </DirectAddButton>
   );
 }
 
-function SubmitButton({fetcher, children, className, style, disabled, onClick, lines}) {
+function DirectAddButton({children, className, style, disabled, onClick, lines, imageSrc}) {
   const {open} = useAside();
-  const openedRef = React.useRef(false);
-
-  // Open aside when the add completes successfully
-  React.useEffect(() => {
-    if (!fetcher) return;
-    const done = fetcher.state === 'idle' && fetcher.data && fetcher.data.cart;
-    if (done && !openedRef.current) {
-      openedRef.current = true;
-      try {
-        // Persist latest cart for any listeners (CartMain override)
-        if (typeof window !== 'undefined') {
-          window.__lastCart = fetcher.data.cart;
-          window.dispatchEvent(new CustomEvent('cart:updated', {detail: fetcher.data.cart}));
-        }
-      } catch {}
-      open('cart');
-      // reset flag after a tick so subsequent adds can re-open
-      setTimeout(() => {
-        openedRef.current = false;
-      }, 100);
-    }
-    // Fallback path for environments where mutation fails (e.g., invalid id or cookie issues)
-    const error = fetcher.state === 'idle' && fetcher.data && (!fetcher.data.cart || (fetcher.data.errors && fetcher.data.errors.length));
-    if (error && lines && !openedRef.current) {
-      const href = buildCartLinesHref(lines, true /* includeQty */);
-      if (href) {
-        fetch(`${href}?silent=1`, {method: 'GET'}).then(async (r) => {
-          try {
-            const j = await r.json();
-            if (j?.cart) {
-              if (typeof window !== 'undefined') {
-                window.__lastCart = j.cart;
-                window.dispatchEvent(new CustomEvent('cart:updated', {detail: j.cart}));
-              }
-              open('cart');
-            }
-          } catch {}
-        }).catch(() => {});
-      }
-    }
-  }, [fetcher?.state, fetcher?.data]);
-
-  const isSubmitting = fetcher?.state !== 'idle';
+  const [loading, setLoading] = React.useState(false);
 
   return (
     <button
-      type="submit"
-      onClick={onClick}
-      disabled={disabled ?? isSubmitting}
+      type="button"
+      onClick={async (e) => {
+        try { if (typeof onClick === 'function') onClick(e); } catch {}
+        try { flyToCart(e.currentTarget, imageSrc); } catch {}
+        if (disabled || loading) return;
+        setLoading(true);
+        try {
+          const href = buildCartLinesHref(lines, true);
+          if (!href) return;
+          const res = await fetch(`${href}?silent=1`, {method: 'GET', credentials: 'include'});
+          const j = await res.json().catch(() => null);
+          if (j?.cart) {
+            if (typeof window !== 'undefined') {
+              window.__lastCart = j.cart;
+              window.dispatchEvent(new CustomEvent('cart:updated', {detail: j.cart}));
+            }
+            open('cart');
+          } else {
+            // fallback hard navigate
+            window.location.href = href;
+          }
+        } finally {
+          setLoading(false);
+        }
+      }}
+      disabled={disabled ?? loading}
       className={className}
       style={style}
     >
-      {isSubmitting ? 'Adding…' : children}
+      {loading ? 'Adding…' : children}
     </button>
   );
 }
