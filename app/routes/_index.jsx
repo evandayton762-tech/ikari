@@ -169,9 +169,14 @@ function ThreeSceneLoader() {
 
   useEffect(() => {
     if (loaded) return;
+    let container;
+    let createdRoot;
+    let cancelled = false;
     import('../components/ThreeHero.client').then(({ default: ThreeHero }) => {
+      if (cancelled) return;
       import('react-dom/client').then(({ createRoot }) => {
-        const container = document.createElement('div');
+        if (cancelled) return;
+        container = document.createElement('div');
         container.id = 'three-container';
         Object.assign(container.style, {
           position: 'absolute',
@@ -181,10 +186,21 @@ function ThreeSceneLoader() {
           zIndex: 5,
         });
         document.body.appendChild(container);
-        createRoot(container).render(<ThreeHero />);
+        createdRoot = createRoot(container);
+        createdRoot.render(<ThreeHero />);
         setLoaded(true);
       });
     });
+
+    return () => {
+      cancelled = true;
+      try {
+        createdRoot?.unmount?.();
+      } catch {}
+      try {
+        container?.parentNode?.removeChild?.(container);
+      } catch {}
+    };
   }, [loaded]);
 
   return null;

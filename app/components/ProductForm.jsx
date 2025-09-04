@@ -100,6 +100,7 @@ export function ProductForm({productOptions, selectedVariant}) {
         onClick={() => {
           open('cart');
         }}
+        selectedVariant={selectedVariant}
         lines={
           selectedVariant
             ? [
