@@ -293,9 +293,7 @@ export default function Product() {
         }}
       />
 
-      <div style={{gridColumn: '1 / -1', marginTop: '2rem'}}>
-        <YouMayAlsoLike product={product} recommended={recommended} fallback={fallbackProducts} />
-      </div>
+      {/* Temporarily remove carousel to simplify add-to-cart flow */}
     </div>
   );
 }

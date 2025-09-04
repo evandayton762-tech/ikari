@@ -36,6 +36,12 @@ export function AddToCartButton({
               type="hidden"
               value={JSON.stringify(analytics)}
             />
+            {/* Provide selectedVariant at top level for useOptimisticCart */}
+            <input
+              name="selectedVariant"
+              type="hidden"
+              value={selectedVariant ? JSON.stringify({id: selectedVariant.id}) : ''}
+            />
             {redirectTo ? (
               <input name="redirectTo" type="hidden" value={redirectTo} />
             ) : null}

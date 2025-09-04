@@ -1,5 +1,5 @@
 // app/routes/_index.jsx
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, lazy, Suspense} from 'react';
 const webframeUrl = '/webframe2.png';
 
 // ClientOnly guard
@@ -8,6 +8,8 @@ function ClientOnly({ children }) {
 }
 
 export const meta = () => [{ title: 'Ikari' }];
+
+const ThreeHero = lazy(() => import('../components/ThreeHero.client'));
 
 export default function Index() {
   return (
@@ -156,52 +158,14 @@ export default function Index() {
         Contact
       </button>
 
-      {/* three scene loader */}
+      {/* three scene (client-only) */}
       <ClientOnly>
-        <ThreeSceneLoader />
+        <div id="three-container" style={{position:'absolute', inset:0, width:'100%', height:'100%', zIndex:5}}>
+          <Suspense fallback={null}>
+            <ThreeHero />
+          </Suspense>
+        </div>
       </ClientOnly>
     </div>
   );
-}
-
-function ThreeSceneLoader() {
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    if (loaded) return;
-    let container;
-    let createdRoot;
-    let cancelled = false;
-    import('../components/ThreeHero.client').then(({ default: ThreeHero }) => {
-      if (cancelled) return;
-      import('react-dom/client').then(({ createRoot }) => {
-        if (cancelled) return;
-        container = document.createElement('div');
-        container.id = 'three-container';
-        Object.assign(container.style, {
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 5,
-        });
-        document.body.appendChild(container);
-        createdRoot = createRoot(container);
-        createdRoot.render(<ThreeHero />);
-        setLoaded(true);
-      });
-    });
-
-    return () => {
-      cancelled = true;
-      try {
-        createdRoot?.unmount?.();
-      } catch {}
-      try {
-        container?.parentNode?.removeChild?.(container);
-      } catch {}
-    };
-  }, [loaded]);
-
-  return null;
 }
