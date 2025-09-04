@@ -20,33 +20,15 @@ export async function action({request, context}) {
   try {
     const {action, inputs} = CartForm.getFormInput(formData);
     
-    // Enhanced debugging (only in development)
-    if (debug) {
-      console.log('[Cart Action]', {
-        action,
-        inputs: JSON.stringify(inputs, null, 2),
-        timestamp: new Date().toISOString()
-      });
-    }
 
     if (!action) {
       throw new Error('No action provided');
     }
 
     switch (action) {
-      case CartForm.ACTIONS.LinesAdd: {
-        if (!Array.isArray(inputs?.lines) || inputs.lines.length === 0) {
-          throw new Error('LinesAdd requires at least one line');
-        }
-        
-        if (debug) console.log('[Cart] Adding lines (original):', JSON.stringify(inputs.lines, null, 2));
-        
-        // Let Hydrogen handle the optimistic cart logic internally
-        // Just pass through the lines as received from the form
+      case CartForm.ACTIONS.LinesAdd:
         result = await cart.addLines(inputs.lines);
-        if (debug) console.log('[Cart] Add result:', JSON.stringify(result, null, 2));
         break;
-      }
       case CartForm.ACTIONS.LinesUpdate: {
         result = await cart.updateLines(inputs.lines);
         break;
@@ -78,20 +60,16 @@ export async function action({request, context}) {
       default:
         throw new Error(`${action} cart action is not defined`);
     }
-  } catch (err) {
-    console.error('[Cart Action Error]', {
-      error: err?.message || String(err),
-      stack: err?.stack,
-      timestamp: new Date().toISOString()
-    });
-    
-    // Surface a safe error payload for fetcher clients
+  } catch (error) {
+    console.error(error);
     return data(
       {
         cart: null,
-        errors: [String(err?.message || err)],
+        errors: [error.message],
         warnings: [],
-        analytics: {cartId: null},
+        analytics: {
+          cartId: null,
+        },
       },
       {status: 400},
     );
