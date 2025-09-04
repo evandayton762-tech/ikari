@@ -1,16 +1,12 @@
-// app/components/ThreeHero.client.jsx
 import React, { Suspense, useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import ParticleEffect from './ParticleEffect';
 import GokuTrail from '~/components/GokuTrail';
-import '~/assets/preserve-glbs';
-
-import gokuUrl from '~/assets/models/goku.glb?url';
 
 function GokuModel() {
   const ref = useRef();
-  const { scene, animations } = useGLTF(gokuUrl);
+  const { scene, animations } = useGLTF('/models/goku.glb');
   const { actions } = useAnimations(animations, ref);
 
   useEffect(() => {
@@ -23,8 +19,8 @@ function GokuModel() {
   useEffect(() => {
     if (ref.current) {
       ref.current.position.y = -5.2;
-      ref.current.rotation.x  = -1.15;
-      ref.current.rotation.y  = -.15;
+      ref.current.rotation.x = -1.15;
+      ref.current.rotation.y = -0.15;
     }
   }, []);
 

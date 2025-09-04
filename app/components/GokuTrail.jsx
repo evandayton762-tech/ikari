@@ -4,18 +4,16 @@ import { useThree, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
-import nimbusUrl from '~/assets/models/nimbus.glb?url';
-
 export default function GokuTrail() {
   const { camera, size } = useThree();
   const gokuRef = useRef();
   const cursorTarget = useRef(new THREE.Vector3());
   const cursorCurrent = useRef(new THREE.Vector3());
 
-  const { scene } = useGLTF(nimbusUrl);
+  const { scene } = useGLTF('/models/nimbus.glb'); // ✅ FIXED PATH — using public/
 
   useEffect(() => {
-    const move = e => {
+    const move = (e) => {
       const x = (e.clientX / size.width) * 2 - 1;
       const y = -(e.clientY / size.height) * 2 + 1;
       cursorTarget.current.set(x, y, 0.5).unproject(camera);
