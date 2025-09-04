@@ -1,13 +1,29 @@
-import {useLoaderData, Link} from '@remix-run/react';
+import React from 'react';
+import {useLoaderData, Link, useNavigate} from '@remix-run/react';
 import {CartForm, Money} from '@shopify/hydrogen';
 import {data} from '@shopify/remix-oxygen';
 import {CartLineItem} from '~/components/CartLineItem';
+import {redirect} from '@shopify/remix-oxygen';
 
 export const meta = () => {
   return [{title: `Hydrogen | Cart`}];
 };
 
-export const headers = ({actionHeaders}) => actionHeaders;
+export const headers = ({actionHeaders, loaderHeaders}) => {
+  const headers = new Headers();
+  // Preserve any Set-Cookie from loader (cart/session) and action (cart mutations)
+  if (loaderHeaders) {
+    const setCookie = loaderHeaders.get('Set-Cookie');
+    if (setCookie) headers.append('Set-Cookie', setCookie);
+    const cache = loaderHeaders.get('Cache-Control');
+    if (cache) headers.set('Cache-Control', cache);
+  }
+  if (actionHeaders) {
+    const setCookie = actionHeaders.get('Set-Cookie');
+    if (setCookie) headers.append('Set-Cookie', setCookie);
+  }
+  return headers;
+};
 
 export async function action({request, context}) {
   const {cart, env} = context;
@@ -83,8 +99,12 @@ export async function action({request, context}) {
   const cartId = result?.cart?.id;
   const headers = cartId ? cart.setCartId(result.cart.id) : new Headers();
 
+  // NOTE: Prefer the mutation payload's cart to avoid read-after-write delay.
+  // Avoid immediately querying cart.get() which can briefly return a stale cart.
+
   // If the Storefront API responded with errors, mark as bad request for fetcher state handling
-  const {cart: cartResult, errors = [], warnings = []} = result ?? {};
+  const {errors = [], warnings = []} = result ?? {};
+  const cartResult = result?.cart || null;
   if (errors?.length) status = 400;
 
   const redirectTo = formData.get('redirectTo') ?? null;
@@ -106,13 +126,46 @@ export async function action({request, context}) {
   );
 }
 
-export async function loader({context}) {
+export async function loader({context, request}) {
+  // Redirect all direct visits to /cart to the homepage with cart aside open
+  const url = new URL(request.url);
+  const shouldRedirect = url.searchParams.get('allow') !== '1';
+  if (shouldRedirect) {
+    url.pathname = '/';
+    url.searchParams.set('cart', 'open');
+    return redirect(url.toString());
+  }
+
   const {cart} = context;
-  return await cart.get();
+  const headers = new Headers();
+  try {
+    const result = await cart.get();
+    if (result?.id) {
+      try {
+        const setHeaders = context.cart.setCartId(result.id);
+        const setCookie = setHeaders.get('Set-Cookie');
+        if (setCookie) headers.append('Set-Cookie', setCookie);
+      } catch {}
+    }
+    return data(result ?? null, {headers});
+  } catch (e) {
+    console.error('Cart loader error:', e);
+    return data(null, {headers});
+  }
 }
 
 export default function Cart() {
-  const cart = useLoaderData();
+  const loaderCart = useLoaderData();
+  const [clientCart, setClientCart] = React.useState(null);
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.__lastCart) setClientCart(window.__lastCart);
+    const onUpdate = (e) => setClientCart(e.detail || null);
+    window.addEventListener('cart:updated', onUpdate);
+    return () => window.removeEventListener('cart:updated', onUpdate);
+  }, []);
+
+  const cart = clientCart || loaderCart;
   const lines = cart?.lines?.nodes ?? [];
   const hasItems = !!cart?.totalQuantity;
   const existingCodes = cart?.discountCodes?.filter((c) => c.applicable).map((c) => c.code) ?? [];

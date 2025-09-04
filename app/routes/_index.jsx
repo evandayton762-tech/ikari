@@ -9,8 +9,6 @@ function ClientOnly({ children }) {
 
 export const meta = () => [{ title: 'Ikari' }];
 
-const ThreeHero = lazy(() => import('../components/ThreeHero.client'));
-
 export default function Index() {
   return (
     <div
@@ -158,7 +156,7 @@ export default function Index() {
         Contact
       </button>
 
-      {/* three scene (client-only) */}
+      {/* three scene (client-only, embedded) */}
       <ClientOnly>
         <div id="three-container" style={{position:'absolute', inset:0, width:'100%', height:'100%', zIndex:5}}>
           <Suspense fallback={null}>
@@ -169,3 +167,5 @@ export default function Index() {
     </div>
   );
 }
+
+const ThreeHero = lazy(() => import('~/components/ThreeHero.client'));

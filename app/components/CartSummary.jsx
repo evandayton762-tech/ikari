@@ -5,21 +5,33 @@ import {useRef} from 'react';
  * @param {CartSummaryProps}
  */
 export function CartSummary({cart, layout}) {
-  const className =
-    layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside';
+  const isAside = layout !== 'page';
+  if (isAside) {
+    const total = cart?.cost?.totalAmount;
+    return (
+      <div style={{marginTop: '1rem'}}>
+        <CartDiscounts discountCodes={cart.discountCodes} />
+        <div style={{height:1, background:'rgba(0,0,0,0.08)', margin:'1rem 0'}} />
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+          <div style={{fontSize:'1.1rem'}}>Estimated total</div>
+          <div style={{fontSize:'1.4rem', fontWeight:700}}>
+            {total ? <Money data={total} /> : '-'}
+          </div>
+        </div>
+        <div style={{opacity:.7, fontSize:'.85rem', marginTop: '.5rem'}}>
+          Pay over time for orders over <strong>$35.00</strong> with Shop Pay. Taxes and shipping calculated at checkout.
+        </div>
+        <CartCheckoutActions checkoutUrl={cart.checkoutUrl} variant="aside" />
+      </div>
+    );
+  }
 
   return (
-    <div aria-labelledby="cart-summary" className={className}>
+    <div aria-labelledby="cart-summary" className={'cart-summary-page'}>
       <h4>Totals</h4>
       <dl className="cart-subtotal">
         <dt>Subtotal</dt>
-        <dd>
-          {cart.cost?.subtotalAmount?.amount ? (
-            <Money data={cart.cost?.subtotalAmount} />
-          ) : (
-            '-'
-          )}
-        </dd>
+        <dd>{cart.cost?.subtotalAmount?.amount ? <Money data={cart.cost?.subtotalAmount} /> : '-'}</dd>
       </dl>
       <CartDiscounts discountCodes={cart.discountCodes} />
       <CartGiftCard giftCardCodes={cart.appliedGiftCards} />
@@ -30,8 +42,31 @@ export function CartSummary({cart, layout}) {
 /**
  * @param {{checkoutUrl?: string}}
  */
-function CartCheckoutActions({checkoutUrl}) {
+function CartCheckoutActions({checkoutUrl, variant}) {
   if (!checkoutUrl) return null;
+
+  if (variant === 'aside') {
+    return (
+      <div style={{marginTop:'1rem'}}>
+        <a
+          href={checkoutUrl}
+          style={{
+            display:'block', width:'100%', textAlign:'center',
+            background:'#000', color:'#fff', padding:'0.9rem 1rem',
+            borderRadius: 16, textDecoration:'none', fontSize:'1rem',
+          }}
+        >
+          Check out
+        </a>
+        <div style={{height:10}} />
+        <a href={checkoutUrl} style={payBtn('#6C47FF','#fff')}>shop Pay</a>
+        <div style={{height:10}} />
+        <a href={checkoutUrl} style={payBtn('#FFC439','#111')}>PayPal</a>
+        <div style={{height:10}} />
+        <a href={checkoutUrl} style={payBtn('#111','#fff')}>G Pay</a>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -41,6 +76,14 @@ function CartCheckoutActions({checkoutUrl}) {
       <br />
     </div>
   );
+}
+
+function payBtn(bg, color) {
+  return {
+    display:'block', width:'100%', textAlign:'center',
+    background:bg, color, padding:'0.85rem 1rem',
+    borderRadius:16, textDecoration:'none', fontWeight:700,
+  };
 }
 
 /**

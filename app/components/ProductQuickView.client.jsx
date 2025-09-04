@@ -154,7 +154,7 @@ export default function ProductQuickView({handle, gid, open, onClose}) {
                 lines={[{merchandiseId: variant.id, quantity: 1}]}
                 selectedVariant={variant}
                 disabled={!variant?.availableForSale}
-                onClick={() => openAside('cart')}
+                imageSrc={product?.featuredImage?.url}
               >
                 {variant?.availableForSale ? 'Add to Cart' : 'Sold Out'}
               </AddToCartButton>

@@ -2,6 +2,8 @@ export const meta = () => {
   return [{title: `Hydrogen | Collections`}];
 };
 
+import {useLoaderData, Link} from '@remix-run/react';
+
 export async function loader({context}) {
   const {storefront} = context;
   const data = await storefront.query(COLLECTIONS_QUERY);
@@ -9,11 +11,18 @@ export async function loader({context}) {
 }
 
 export default function CollectionsIndex() {
+  const data = useLoaderData();
+  const collections = data?.collections?.nodes ?? [];
   return (
     <div>
       <h1>Collections</h1>
-      {/* Replace with a collections grid if desired */}
-      <p>Select a collection to browse products.</p>
+      <ul>
+        {collections.map((c) => (
+          <li key={c.id}>
+            <Link to={`/collections/${c.handle}`}>{c.title}</Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -32,4 +41,3 @@ const COLLECTIONS_QUERY = `#graphql
     }
   }
 `;
-

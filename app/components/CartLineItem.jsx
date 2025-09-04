@@ -13,14 +13,24 @@ import {useAside} from './Aside';
  * }}
  */
 export function CartLineItem({layout, line}) {
-  const {id, merchandise} = line;
-  const {product, title, image, selectedOptions} = merchandise;
-  const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
+  const {id, merchandise} = line || {};
+  const product = merchandise?.product;
+  // Prefer the product title if the variant title is a generic "Default Title"
+  const isDefaultVariantTitle =
+    typeof merchandise?.title === 'string' && merchandise.title.trim().toLowerCase() === 'default title';
+  const title = isDefaultVariantTitle
+    ? product?.title || merchandise?.title || 'Item'
+    : merchandise?.title || product?.title || 'Item';
+  const image = merchandise?.image;
+  const selectedOptions = merchandise?.selectedOptions || [];
+  const lineItemUrl = product?.handle
+    ? useVariantUrl(product.handle, selectedOptions)
+    : '#';
   const {close} = useAside();
 
   return (
     <li key={id} className="cart-line">
-      {image && (
+      {image?.url && (
         <Image
           alt={title}
           aspectRatio="1/1"
@@ -32,29 +42,35 @@ export function CartLineItem({layout, line}) {
       )}
 
       <div>
-        <Link
-          prefetch="intent"
-          to={lineItemUrl}
-          onClick={() => {
-            if (layout === 'aside') {
-              close();
-            }
-          }}
-        >
+        {product?.handle ? (
+          <Link
+            prefetch="intent"
+            to={lineItemUrl}
+            onClick={() => {
+              if (layout === 'aside') close();
+            }}
+          >
+            <p>
+              <strong>{title}</strong>
+            </p>
+          </Link>
+        ) : (
           <p>
-            <strong>{product.title}</strong>
+            <strong>{title}</strong>
           </p>
-        </Link>
-        <ProductPrice price={line?.cost?.totalAmount} />
-        <ul>
-          {selectedOptions.map((option) => (
-            <li key={option.name}>
-              <small>
-                {option.name}: {option.value}
-              </small>
-            </li>
-          ))}
-        </ul>
+        )}
+        {line?.cost?.totalAmount ? <ProductPrice price={line?.cost?.totalAmount} /> : null}
+        {selectedOptions.length ? (
+          <ul>
+            {selectedOptions.map((option) => (
+              <li key={option.name}>
+                <small>
+                  {option.name}: {option.value}
+                </small>
+              </li>
+            ))}
+          </ul>
+        ) : null}
         <CartLineQuantity line={line} />
       </div>
     </li>

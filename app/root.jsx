@@ -1,13 +1,13 @@
 // app/root.jsx
 import React from 'react';
-import {Links, Meta, Outlet, Scripts, ScrollRestoration, Await, useLoaderData, useAsyncValue, useLocation, Link} from '@remix-run/react';
+import {Links, Meta, Outlet, Scripts, ScrollRestoration, Await, useLoaderData, useAsyncValue, useLocation, Link, useFetchers} from '@remix-run/react';
 import {defer} from '@shopify/remix-oxygen';
 import {Aside, useAside} from '~/components/Aside';
 import Nav from '~/components/Nav';
 const CartRevalidator = React.lazy(() => import('~/components/CartRevalidator.client'));
 const GlobalParticles = React.lazy(() => import('~/components/GlobalParticles.client'));
 import {CartMain} from '~/components/CartMain';
-import {useOptimisticCart} from '@shopify/hydrogen';
+// import {useOptimisticCart} from '@shopify/hydrogen';
 import {SEARCH_ENDPOINT, SearchFormPredictive} from '~/components/SearchFormPredictive';
 import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 
@@ -55,13 +55,33 @@ export async function loader({context}) {
 
 function CartAside({cart}) {
   return (
-    <Aside type="cart" heading="CART">
+    <Aside type="cart" heading={<CartAsideHeader cart={cart} />}>
       <React.Suspense fallback={<p>Loading cart ...</p>}>
         <Await resolve={cart}>
           {(data) => <CartMain cart={data} layout="aside" />}
         </Await>
       </React.Suspense>
     </Aside>
+  );
+}
+
+function CartAsideHeader({cart}) {
+  return (
+    <React.Suspense fallback={<h3>Cart</h3>}>
+      <Await resolve={cart}>
+        {(c) => (
+          <h3 style={{display:'flex', alignItems:'center', gap:8, margin:0}}>
+            Cart
+            <span style={{
+              background:'#000', color:'#fff', borderRadius:999,
+              padding:'2px 8px', fontSize:12
+            }}>
+              {c?.totalQuantity ?? 0}
+            </span>
+          </h3>
+        )}
+      </Await>
+    </React.Suspense>
   );
 }
 
@@ -82,6 +102,7 @@ function CartButtonInner({count}) {
   const {open} = useAside();
   return (
     <button
+      className="cart-fly-target"
       onClick={() => open('cart')}
       style={{
         background: 'rgba(0,0,0,0.7)',
@@ -102,8 +123,8 @@ function CartButtonInner({count}) {
 
 function CartCountResolved() {
   const originalCart = useAsyncValue();
-  const optimistic = useOptimisticCart(originalCart);
-  return <CartButtonInner count={optimistic?.totalQuantity ?? 0} />;
+  const count = originalCart?.totalQuantity ?? 0;
+  return <CartButtonInner count={count} />;
 }
 
 export default function App() {
@@ -134,6 +155,16 @@ export default function App() {
 
 function AppShell({data, location}) {
   const asideState = useAside();
+  React.useEffect(() => {
+    try {
+      const url = new URL(window.location.href);
+      if (url.searchParams.get('cart') === 'open') {
+        asideState.open('cart');
+        url.searchParams.delete('cart');
+        window.history.replaceState({}, '', url);
+      }
+    } catch {}
+  }, [asideState]);
   return (
     <>
       {/* Global top-center navigation on all pages */}
@@ -148,13 +179,13 @@ function AppShell({data, location}) {
       <React.Suspense fallback={null}>
         <CartRevalidator />
       </React.Suspense>
+      {asideState?.type === 'closed' && <MobileButton />}
       {asideState?.type === 'closed' && <SearchButton />}
       {/* Single instance of CartRevalidator is sufficient */}
       <SearchAside />
+      <MobileAside />
       {asideState?.type === 'closed' && <CartButton cart={data.cart} />}
-      {location?.pathname?.endsWith('/cart') ? null : (
-        <CartAside cart={data.cart} />
-      )}
+      <CartAside cart={data.cart} />
       <Outlet />
     </>
   );
@@ -268,6 +299,46 @@ function SearchAside() {
             );
           }}
         </SearchResultsPredictive>
+      </div>
+    </Aside>
+  );
+}
+
+function MobileButton() {
+  const {open} = useAside();
+  return (
+    <button
+      aria-label="Menu"
+      onClick={() => open('mobile')}
+      style={{
+        position: 'fixed',
+        top: '1rem',
+        left: '1rem',
+        zIndex: 300,
+        background: 'rgba(0,0,0,0.7)',
+        color: '#fff',
+        border: '1px solid rgba(255,255,255,0.3)',
+        padding: '0.45rem 0.55rem',
+        borderRadius: 6,
+        cursor: 'pointer',
+      }}
+    >
+      ☰
+    </button>
+  );
+}
+
+function MobileAside() {
+  return (
+    <Aside type="mobile" heading="MENU">
+      <div style={{display:'grid', gap:'.5rem'}}>
+        <Link to="/" prefetch="intent">Home</Link>
+        <Link to="/shop" prefetch="intent">Shop All</Link>
+        <Link to="/collections" prefetch="intent">Collections</Link>
+        <Link to="/search" prefetch="intent">Search</Link>
+        <Link to="/contact" prefetch="intent">Contact</Link>
+        <Link to="/overview" prefetch="intent">Overview</Link>
+        <Link to="/account/login" prefetch="intent">Account</Link>
       </div>
     </Aside>
   );

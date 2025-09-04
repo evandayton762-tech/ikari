@@ -24,6 +24,9 @@ export async function createAppLoadContext(request, env, executionContext) {
     AppSession.init(request, [env.SESSION_SECRET]),
   ]);
 
+  const url = new URL(request.url);
+  const isHttps = url.protocol === 'https:';
+
   const hydrogenContext = createHydrogenContext({
     env,
     request,
@@ -33,13 +36,13 @@ export async function createAppLoadContext(request, env, executionContext) {
     i18n: getLocaleFromRequest(request),
     cart: {
       queryFragment: CART_QUERY_FRAGMENT,
-      // Ensure cart cookie works in local HTTP dev: disable secure flag
       cookie: {
-        secure: false, 
-        sameSite: 'Lax', 
+        // Disable secure flag on local HTTP so the browser actually stores it
+        secure: isHttps,
+        sameSite: 'lax',
         path: '/',
-        httpOnly: false,
-        maxAge: 60 * 60 * 24 * 30 // 30 days
+        httpOnly: true,
+        maxAge: 60 * 60 * 24 * 30, // 30 days
       },
     },
   });

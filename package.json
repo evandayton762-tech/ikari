@@ -9,7 +9,8 @@
     "dev": "shopify hydrogen dev",
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern .",
-    "codegen": "shopify hydrogen codegen"
+    "codegen": "shopify hydrogen codegen",
+    "migrate:printify": "node scripts/printify-migrate.js"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {

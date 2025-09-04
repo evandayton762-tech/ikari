@@ -1,6 +1,6 @@
 import {Suspense} from 'react';
 import {Await, NavLink, useAsyncValue} from '@remix-run/react';
-import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
+import {useAnalytics} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
 
 /**
@@ -132,6 +132,7 @@ function CartBadge({count}) {
 
   return (
     <a
+      className="cart-fly-target"
       href="/cart"
       onClick={(e) => {
         e.preventDefault();
@@ -163,8 +164,7 @@ function CartToggle({cart}) {
 }
 
 function CartBanner() {
-  const originalCart = useAsyncValue();
-  const cart = useOptimisticCart(originalCart);
+  const cart = useAsyncValue();
   return <CartBadge count={cart?.totalQuantity ?? 0} />;
 }
 

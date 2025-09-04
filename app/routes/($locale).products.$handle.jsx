@@ -10,6 +10,7 @@ import {
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
 import {AddToCartButton} from '~/components/AddToCartButton';
+// Keep 3D ProductScene primary; show thumbnails as mini-carousel below
 import {useAside} from '~/components/Aside';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 const ProductScene = lazy(() => import('~/components/ProductScene.client'));
@@ -100,7 +101,13 @@ export default function Product() {
 
   const {title, descriptionHtml} = product;
 
-  const imageUrl = selectedVariant?.image?.url || product?.featuredImage?.url;
+  const images = product?.images?.nodes || [];
+  const initialUrl = selectedVariant?.image?.url || product?.featuredImage?.url;
+  const [activeUrl, setActiveUrl] = useState(initialUrl);
+  useEffect(() => {
+    const next = selectedVariant?.image?.url || product?.featuredImage?.url;
+    if (next) setActiveUrl(next);
+  }, [selectedVariant?.id]);
   const navigate = useNavigate();
   const {open} = useAside();
   const [qty, setQty] = useState(1);
@@ -167,13 +174,29 @@ export default function Product() {
       <div style={{border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '1rem', background: '#0d0d0d', position:'relative', overflow:'hidden', zIndex:1}}>
         <div style={{width: '100%', aspectRatio: aspect, maxHeight: isPortrait ? '66vh' : '78vh'}}>
           <Suspense fallback={<div style={{padding: '2rem', color: '#888'}}>Loading…</div>}>
-            {imageUrl ? (
-              <ProductScene textureUrl={imageUrl} />
+            {activeUrl ? (
+              <ProductScene textureUrl={activeUrl} />
             ) : (
               <div style={{padding: '2rem', color: '#888'}}>No image</div>
             )}
           </Suspense>
         </div>
+        {images.length > 1 && (
+          <div style={{display:'flex', gap:8, marginTop:12, overflowX:'auto'}}>
+            {images.map((img, i) => (
+              <button
+                key={img.url + i}
+                onClick={() => setActiveUrl(img.url)}
+                style={{
+                  border: activeUrl===img.url ? '2px solid #ff4d00' : '1px solid rgba(255,255,255,0.2)',
+                  background:'transparent', padding:0, borderRadius:8, cursor:'pointer'
+                }}
+              >
+                <img src={img.url} alt={img.altText||'thumbnail'} style={{display:'block', width:72, height:72, objectFit:'cover', borderRadius:6}} />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div style={{padding: '0 0.5rem', position: 'relative', zIndex: 3, pointerEvents:'auto'}}>
@@ -202,11 +225,19 @@ export default function Product() {
         }}>
           <div style={{display: 'flex', alignItems: 'center', gap: '.75rem'}}>
             <div style={{opacity: 0.7, fontSize: '.85rem', width: 72}}>Quantity</div>
-            <div style={{display:'inline-flex', alignItems:'center', border:'1px solid rgba(255,255,255,0.2)', borderRadius: 8}}>
+            <div style={{display:'inline-flex', alignItems:'center', border:'1px solid rgba(255,255,255,0.2)', borderRadius: 8, overflow:'hidden'}}>
+              <button
+                type="button"
+                onClick={() => setQty((q) => Math.max(1, q - 1))}
+                style={stepBtn}
+                aria-label="Decrease quantity"
+              >−</button>
+              <div style={{minWidth: 36, textAlign:'center'}}>{qty}</div>
               <button
                 type="button"
                 onClick={() => setQty((q) => q + 1)}
                 style={stepBtn}
+                aria-label="Increase quantity"
               >+</button>
             </div>
           </div>
@@ -229,9 +260,9 @@ export default function Product() {
             {selectedVariant?.id ? (
               <AddToCartButton
                 disabled={!selectedVariant.availableForSale}
-                onClick={() => open('cart')}
                 lines={[{ merchandiseId: selectedVariant.id, quantity: qty }]}
                 selectedVariant={selectedVariant}
+                imageSrc={activeUrl}
                 style={{
                   background:'#ff4d00',
                   color:'#000',
@@ -490,6 +521,14 @@ const PRODUCT_FRAGMENT = `#graphql
     description
     encodedVariantExistence
     encodedVariantAvailability
+    images(first: 12) {
+      nodes {
+        url
+        altText
+        width
+        height
+      }
+    }
     options {
       name
       optionValues {

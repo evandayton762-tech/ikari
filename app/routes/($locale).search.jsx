@@ -28,38 +28,44 @@ export default function SearchPage() {
   if (type === 'predictive') return null;
 
   return (
-    <div className="search">
-      <h1>Search</h1>
-      <SearchForm>
-        {({inputRef}) => (
-          <>
-            <input
-              defaultValue={term}
-              name="q"
-              placeholder="Search…"
-              ref={inputRef}
-              type="search"
-            />
-            &nbsp;
-            <button type="submit">Search</button>
-          </>
-        )}
-      </SearchForm>
-      {error && <p style={{color: 'red'}}>{error}</p>}
-      {!term || !result?.total ? (
-        <SearchResults.Empty />
-      ) : (
-        <SearchResults result={result} term={term}>
-          {({articles, pages, products, term}) => (
-            <div>
-              <SearchResults.Products products={products} term={term} />
-              <SearchResults.Pages pages={pages} term={term} />
-              <SearchResults.Articles articles={articles} term={term} />
-            </div>
+    <div className="search-page" style={{minHeight:'100vh', background:'#000', color:'#fff', display:'flex', flexDirection:'column', alignItems:'center', paddingTop:'16vh'}}>
+      <div style={{maxWidth:900, width:'92%'}}>
+        <h1 style={{textAlign:'center', margin:0, letterSpacing:'.12em'}}>Search</h1>
+        <div style={{display:'flex', justifyContent:'center', marginTop:'1rem'}}>
+          <SearchForm style={{display:'flex', gap:'.5rem', width:'min(700px, 100%)'}}>
+            {({inputRef}) => (
+              <>
+                <input
+                  defaultValue={term}
+                  name="q"
+                  placeholder="Search products, pages, articles…"
+                  ref={inputRef}
+                  type="search"
+                  style={{flex:1, padding:'0.9rem 1rem', borderRadius:12, border:'1px solid rgba(255,255,255,0.2)', background:'#0d0d0d', color:'#fff'}}
+                />
+                <button type="submit" style={{padding:'0.9rem 1.1rem', borderRadius:12, border:'1px solid #ff864d', background:'#ff4d00', color:'#000', fontWeight:700}}>Search</button>
+              </>
+            )}
+          </SearchForm>
+        </div>
+        {error && <p style={{color: '#f77', textAlign:'center'}}>{error}</p>}
+        <div style={{marginTop:'2rem'}}>
+          {!term || !result?.total ? (
+            <SearchResults.Empty />
+          ) : (
+            <SearchResults result={result} term={term}>
+              {({articles, pages, products, term}) => (
+                <div>
+                  <SearchResults.Products products={products} term={term} />
+                  <SearchResults.Pages pages={pages} term={term} />
+                  <SearchResults.Articles articles={articles} term={term} />
+                </div>
+              )}
+            </SearchResults>
           )}
-        </SearchResults>
-      )}
-      <Analytics.SearchView data={{searchTerm: term, searchResults: result}} />
+        </div>
+        <Analytics.SearchView data={{searchTerm: term, searchResults: result}} />
+      </div>
     </div>
   );
 }
@@ -375,4 +381,3 @@ async function predictiveSearch({request, context}) {
 
   return {type, term, result: {items, total}};
 }
-

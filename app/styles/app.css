@@ -47,7 +47,7 @@ aside {
 
 aside header {
   align-items: center;
-  border-bottom: 1px solid var(--color-dark);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
   display: flex;
   height: var(--header-height);
   justify-content: space-between;
@@ -75,9 +75,7 @@ aside header h2 {
   margin-top: 0;
 }
 
-aside main {
-  margin: 1rem;
-}
+aside main { margin: 1rem; }
 
 /* ensure text inside the white aside is visible (override global white body color) */
 aside a,
@@ -162,6 +160,9 @@ aside li {
 .overlay.expanded aside {
   transform: translateX(calc(var(--aside-width) * -1));
 }
+
+/* Fly-to-cart image */
+.fly-img { pointer-events: none; will-change: transform, opacity; }
 
 button.reset {
   border: 0;

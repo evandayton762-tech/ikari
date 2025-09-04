@@ -36,7 +36,7 @@ export class AppSession {
         httpOnly: true,
         path: '/',
         sameSite: 'lax',
-        secure: false, // Allow local development
+        secure: process.env.NODE_ENV === 'production',
         maxAge: 60 * 60 * 24 * 30, // 30 days
         secrets,
       },
@@ -52,26 +52,27 @@ export class AppSession {
     return new this(storage, session);
   }
 
-  get has() {
-    return this.#session.has;
+  has(key) {
+    return this.#session.has(key);
   }
 
-  get get() {
-    return this.#session.get;
+  get(key) {
+    return this.#session.get(key);
   }
 
-  get flash() {
-    return this.#session.flash;
-  }
-
-  get unset() {
+  flash(key, value) {
     this.isPending = true;
-    return this.#session.unset;
+    return this.#session.flash(key, value);
   }
 
-  get set() {
+  unset(key) {
     this.isPending = true;
-    return this.#session.set;
+    return this.#session.unset(key);
+  }
+
+  set(key, value) {
+    this.isPending = true;
+    return this.#session.set(key, value);
   }
 
   destroy() {

@@ -1,4 +1,4 @@
-import {useOptimisticCart} from '@shopify/hydrogen';
+import React from 'react';
 import {Link} from '@remix-run/react';
 import {useAside} from '~/components/Aside';
 import {CartLineItem} from '~/components/CartLineItem';
@@ -10,9 +10,18 @@ import {CartSummary} from './CartSummary';
  * @param {CartMainProps}
  */
 export function CartMain({layout, cart: originalCart}) {
-  // The useOptimisticCart hook applies pending actions to the cart
-  // so the user immediately sees feedback when they modify the cart.
-  const cart = useOptimisticCart(originalCart);
+  // Use latest cart from client action responses if available
+  const [clientCart, setClientCart] = React.useState(null);
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.__lastCart) setClientCart(window.__lastCart);
+    const onUpdate = (e) => setClientCart(e.detail || null);
+    window.addEventListener('cart:updated', onUpdate);
+    return () => window.removeEventListener('cart:updated', onUpdate);
+  }, []);
+
+  // Prefer client override, then original loader cart
+  const cart = clientCart || originalCart;
 
   const linesCount = Boolean(cart?.lines?.nodes?.length || 0);
   const withDiscount =
@@ -32,30 +41,7 @@ export function CartMain({layout, cart: originalCart}) {
             ))}
           </ul>
         </div>
-        {layout === 'aside' && cartHasItems && (
-          <div style={{
-            margin: '0.75rem 0 0.75rem 0',
-            display: 'flex',
-            justifyContent: 'flex-end',
-          }}>
-            <Link
-              to="/cart"
-              prefetch="intent"
-              style={{
-                background: '#fff',
-                color: '#000',
-                textDecoration: 'none',
-                padding: '0.5rem 0.75rem',
-                borderRadius: 8,
-                border: '1px solid rgba(0,0,0,0.2)',
-                fontSize: '0.85rem',
-                letterSpacing: '0.04em',
-              }}
-            >
-              View Cart →
-            </Link>
-          </div>
-        )}
+        {/* Removed View Cart; all checkout happens from aside */}
         {cartHasItems && <CartSummary cart={cart} layout={layout} />}
       </div>
     </div>

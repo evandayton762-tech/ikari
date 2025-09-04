@@ -94,7 +94,7 @@ function SearchResultsProducts({term, products}) {
 
   return (
     <div className="search-result">
-      <h2>Products</h2>
+      <h2 style={{margin:'1rem 0'}}>Products</h2>
       <Pagination connection={products}>
         {({nodes, isLoading, NextLink, PreviousLink}) => {
           const ItemsMarkup = nodes.map((product) => {
@@ -108,34 +108,38 @@ function SearchResultsProducts({term, products}) {
             const image = product?.selectedOrFirstAvailableVariant?.image;
 
             return (
-              <div className="search-results-item" key={product.id}>
-                <Link prefetch="intent" to={productUrl}>
-                  {image && (
-                    <Image data={image} alt={product.title} width={50} />
-                  )}
-                  <div>
-                    <p>{product.title}</p>
-                    <small>{price && <Money data={price} />}</small>
-                  </div>
-                </Link>
-              </div>
+              <Link
+                key={product.id}
+                prefetch="intent"
+                to={productUrl}
+                style={{
+                  display:'grid', gridTemplateColumns:'72px 1fr', gap:12,
+                  padding:'10px', border:'1px solid rgba(255,255,255,0.15)', borderRadius:12,
+                  textDecoration:'none', color:'#fff', background:'#0d0d0d'
+                }}
+              >
+                {image && (
+                  <Image data={image} alt={product.title} width={72} height={72} style={{borderRadius:8, objectFit:'cover'}} />
+                )}
+                <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', gap:12}}>
+                  <p style={{margin:0}}>{product.title}</p>
+                  <small>{price && <Money data={price} />}</small>
+                </div>
+              </Link>
             );
           });
 
           return (
-            <div>
-              <div>
+            <div style={{display:'grid', gap:12}}>
+              <div style={{textAlign:'center'}}>
                 <PreviousLink>
-                  {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
+                  {isLoading ? 'Loading…' : <span>↑ Load previous</span>}
                 </PreviousLink>
               </div>
-              <div>
-                {ItemsMarkup}
-                <br />
-              </div>
-              <div>
+              <div style={{display:'grid', gap:12}}>{ItemsMarkup}</div>
+              <div style={{textAlign:'center'}}>
                 <NextLink>
-                  {isLoading ? 'Loading...' : <span>Load more ↓</span>}
+                  {isLoading ? 'Loading…' : <span>Load more ↓</span>}
                 </NextLink>
               </div>
             </div>
@@ -148,7 +152,9 @@ function SearchResultsProducts({term, products}) {
 }
 
 function SearchResultsEmpty() {
-  return <p>No results, try a different search.</p>;
+  return (
+    <div style={{textAlign:'center', opacity:.75}}>No results, try a different search.</div>
+  );
 }
 
 /** @typedef {RegularSearchReturn['result']['items']} SearchItems */
