@@ -242,7 +242,7 @@ export default function Product() {
                 merchandiseId: selectedVariant.id,
                 quantity: qty,
                 // Provide variant data for optimistic cart (required by Hydrogen)
-                merchandise: selectedVariant
+                selectedVariant: selectedVariant
               }] : []}
               style={{
                 background:'#ff4d00',

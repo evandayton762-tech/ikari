@@ -39,23 +39,11 @@ export async function action({request, context}) {
           throw new Error('LinesAdd requires at least one line');
         }
         
-        // Validate line items before sending to API
-        const validLines = inputs.lines.map(line => {
-          if (!line.merchandiseId) {
-            throw new Error('Missing merchandiseId in line item');
-          }
-          // Only send API-compatible fields to Shopify
-          // (merchandise is used by optimistic cart but not sent to API)
-          return {
-            merchandiseId: line.merchandiseId,
-            quantity: line.quantity || 1,
-            // Only include additional properties that Shopify expects
-            ...(line.attributes && { attributes: line.attributes }),
-          };
-        });
+        if (debug) console.log('[Cart] Adding lines (original):', JSON.stringify(inputs.lines, null, 2));
         
-        if (debug) console.log('[Cart] Adding lines:', JSON.stringify(validLines, null, 2));
-        result = await cart.addLines(validLines);
+        // Let Hydrogen handle the optimistic cart logic internally
+        // Just pass through the lines as received from the form
+        result = await cart.addLines(inputs.lines);
         if (debug) console.log('[Cart] Add result:', JSON.stringify(result, null, 2));
         break;
       }
