@@ -26,9 +26,14 @@ export async function action({request, context}) {
     }
 
     switch (action) {
-      case CartForm.ACTIONS.LinesAdd:
-        result = await cart.addLines(inputs.lines);
+      case CartForm.ACTIONS.LinesAdd: {
+        // Try to add to an existing cart; if none exists, create one with lines
+        result = await cart.addLines(inputs.lines).catch(() => null);
+        if (!result?.cart?.id) {
+          result = await cart.create({lines: inputs.lines});
+        }
         break;
+      }
       case CartForm.ACTIONS.LinesUpdate: {
         result = await cart.updateLines(inputs.lines);
         break;
