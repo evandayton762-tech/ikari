@@ -12,7 +12,9 @@
     "codegen": "shopify hydrogen codegen",
     "migrate:printify": "node scripts/printify-migrate.js",
     "sync:printify:dry": "node scripts/sync-from-printify.mjs",
-    "sync:printify": "SYNC_APPLY=true node scripts/sync-from-printify.mjs"
+    "sync:printify": "SYNC_APPLY=true node scripts/sync-from-printify.mjs",
+    "sync:orientation:dry": "node scripts/sync-orientation-pricing.mjs",
+    "sync:orientation": "SYNC_APPLY=true node scripts/sync-orientation-pricing.mjs"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
