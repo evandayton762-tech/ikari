@@ -46,10 +46,17 @@ function DirectAddButton({children, className, style, disabled, onClick, lines, 
           if (!href) return;
           const res = await fetch(`${href}?silent=1`, {method: 'GET', credentials: 'include'});
           const j = await res.json().catch(() => null);
-          if (j?.cart) {
+          let latest = j?.cart || null;
+          // Fetch full cart (with lines) to ensure aside renders items
+          try {
+            const r2 = await fetch('/api/cart', {credentials: 'include'});
+            const j2 = await r2.json().catch(() => null);
+            if (j2?.cart) latest = j2.cart;
+          } catch {}
+          if (latest) {
             if (typeof window !== 'undefined') {
-              window.__lastCart = j.cart;
-              window.dispatchEvent(new CustomEvent('cart:updated', {detail: j.cart}));
+              window.__lastCart = latest;
+              window.dispatchEvent(new CustomEvent('cart:updated', {detail: latest}));
             }
             open('cart');
           } else {
