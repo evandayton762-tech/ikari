@@ -1,4 +1,5 @@
 import {CartForm, Image} from '@shopify/hydrogen';
+import React from 'react';
 import {useVariantUrl} from '~/lib/variants';
 import {Link} from '@remix-run/react';
 import {ProductPrice} from './ProductPrice';
@@ -27,9 +28,24 @@ export function CartLineItem({layout, line}) {
     ? useVariantUrl(product.handle, selectedOptions)
     : '#';
   const {close} = useAside();
+  const [highlight, setHighlight] = React.useState(false);
+
+  React.useEffect(() => {
+    try {
+      if (typeof window !== 'undefined' && merchandise?.id) {
+        const hv = window.__highlightVariantId;
+        if (hv && hv === merchandise.id) {
+          setHighlight(true);
+          setTimeout(() => setHighlight(false), 1600);
+          // clear it so only the first matching line highlights
+          window.__highlightVariantId = null;
+        }
+      }
+    } catch {}
+  }, [merchandise?.id, id]);
 
   return (
-    <li key={id} className="cart-line">
+    <li key={id} className="cart-line" style={highlight ? {boxShadow:'0 0 0 2px #ff4d00', borderRadius:8, transition:'box-shadow .6s'} : undefined}>
       {image?.url && (
         <Image
           alt={title}

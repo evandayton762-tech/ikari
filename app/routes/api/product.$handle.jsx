@@ -35,6 +35,19 @@ const PRODUCT_MIN_QUERY = `#graphql
       description
       descriptionHtml
       featuredImage { id url altText width height }
+      options { name values }
+      variants(first: 100) {
+        nodes {
+          id
+          title
+          availableForSale
+          image { id url altText width height }
+          price { amount currencyCode }
+          compareAtPrice { amount currencyCode }
+          selectedOptions { name value }
+          sku
+        }
+      }
       selectedOrFirstAvailableVariant(selectedOptions: [], ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
         id
         title

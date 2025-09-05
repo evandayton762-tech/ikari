@@ -14,6 +14,7 @@ export function AddToCartButton({
   style,
   redirectTo,
   imageSrc,
+  attributes,
 }) {
   return (
     <DirectAddButton
@@ -22,6 +23,7 @@ export function AddToCartButton({
       disabled={disabled}
       lines={lines}
       imageSrc={imageSrc}
+      attributes={attributes}
       onClick={onClick}
     >
       {children}
@@ -29,7 +31,7 @@ export function AddToCartButton({
   );
 }
 
-function DirectAddButton({children, className, style, disabled, onClick, lines, imageSrc}) {
+function DirectAddButton({children, className, style, disabled, onClick, lines, imageSrc, attributes}) {
   const {open} = useAside();
   const [loading, setLoading] = React.useState(false);
 
@@ -44,7 +46,8 @@ function DirectAddButton({children, className, style, disabled, onClick, lines, 
         try {
           const href = buildCartLinesHref(lines, true);
           if (!href) return;
-          const res = await fetch(`${href}?silent=1`, {method: 'GET', credentials: 'include'});
+          const qs = buildAttrQuery(attributes);
+          const res = await fetch(`${href}?silent=1${qs}`, {method: 'GET', credentials: 'include'});
           const j = await res.json().catch(() => null);
           let latest = j?.cart || null;
           // Fetch full cart (with lines) to ensure aside renders items
@@ -56,12 +59,14 @@ function DirectAddButton({children, className, style, disabled, onClick, lines, 
           if (latest) {
             if (typeof window !== 'undefined') {
               window.__lastCart = latest;
+              try { if (Array.isArray(lines) && lines[0]?.merchandiseId) window.__highlightVariantId = lines[0].merchandiseId; } catch {}
               window.dispatchEvent(new CustomEvent('cart:updated', {detail: latest}));
+              window.dispatchEvent(new CustomEvent('toast:show', {detail: 'Added to cart'}));
             }
             open('cart');
           } else {
             // fallback hard navigate
-            window.location.href = href;
+            window.location.href = `${href}${qs}`;
           }
         } finally {
           setLoading(false);
@@ -122,6 +127,21 @@ function buildCartLinesHref(lines, includeQty=false) {
     return `/cart/${parts.join(',')}`;
   } catch {
     return null;
+  }
+}
+
+function buildAttrQuery(attributes) {
+  try {
+    const params = [];
+    if (attributes && typeof attributes === 'object') {
+      for (const [k, v] of Object.entries(attributes)) {
+        if (!k || v == null || v === '') continue;
+        params.push(`attr_${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`);
+      }
+    }
+    return params.length ? `&${params.join('&')}` : '';
+  } catch {
+    return '';
   }
 }
 

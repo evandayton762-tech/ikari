@@ -10,7 +10,9 @@
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern .",
     "codegen": "shopify hydrogen codegen",
-    "migrate:printify": "node scripts/printify-migrate.js"
+    "migrate:printify": "node scripts/printify-migrate.js",
+    "sync:printify:dry": "node scripts/sync-from-printify.mjs",
+    "sync:printify": "SYNC_APPLY=true node scripts/sync-from-printify.mjs"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {

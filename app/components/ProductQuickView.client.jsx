@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useFetcher, Link} from '@remix-run/react';
 import {useAside} from '~/components/Aside';
 import ProductScene from '~/components/ProductScene.client';
@@ -28,7 +28,47 @@ export default function ProductQuickView({handle, gid, open, onClose}) {
   if (!open) return null;
 
   const product = fetcher.data?.product;
-  const variant = product?.selectedOrFirstAvailableVariant;
+  const [currentVariant, setCurrentVariant] = useState(null);
+  useEffect(() => {
+    if (product?.selectedOrFirstAvailableVariant) {
+      setCurrentVariant(product.selectedOrFirstAvailableVariant);
+    }
+  }, [product?.id]);
+
+  const sizeValues = useMemo(() => {
+    const opt = (product?.options || []).find((o) => String(o.name).toLowerCase() === 'size');
+    return opt?.values || [];
+  }, [product?.options]);
+
+  // Custom size fallback (inches) when no Size option exists
+  const baseW = product?.featuredImage?.width || 1000;
+  const baseH = product?.featuredImage?.height || 1000;
+  const ratio = baseW && baseH ? baseW / baseH : 1;
+  const [customW, setCustomW] = useState(24);
+  const customH = Math.max(1, Math.round((customW / ratio) * 10) / 10);
+
+  function onSizeChange(e) {
+    const value = e.target.value;
+    const v = (product?.variants?.nodes || []).find((n) => (n?.selectedOptions || []).some((o) => o.name.toLowerCase() === 'size' && o.value === value));
+    if (v) setCurrentVariant(v);
+  }
+
+  // Printify sizes (read-only reference + optional attribute capture)
+  const [printifySizes, setPrintifySizes] = useState([]);
+  const [printifySize, setPrintifySize] = useState('');
+  useEffect(() => {
+    const h = product?.handle;
+    if (!h) return;
+    fetch(`/api.printify/sizes/${encodeURIComponent(h)}`)
+      .then((r) => r.json())
+      .then((j) => {
+        if (j?.sizes?.length) {
+          setPrintifySizes(j.sizes);
+          setPrintifySize(j.sizes[0]);
+        }
+      })
+      .catch(() => {});
+  }, [product?.handle]);
 
   // Basic styles used by the quick view. These mirror the upstream file.
   const overlayStyle = {
@@ -128,15 +168,15 @@ export default function ProductQuickView({handle, gid, open, onClose}) {
               ×
             </button>
           </div>
-          {variant && (
+          {currentVariant && (
             <div style={priceRowStyle}>
               <span>
-                {variant.price &&
-                  `$${Number(variant.price.amount).toFixed(2)} ${variant.price.currencyCode}`}
+                {currentVariant.price &&
+                  `$${Number(currentVariant.price.amount).toFixed(2)} ${currentVariant.price.currencyCode}`}
               </span>
-              {variant.compareAtPrice && (
+              {currentVariant.compareAtPrice && (
                 <span style={{opacity: 0.6, textDecoration: 'line-through'}}>
-                  {`$${Number(variant.compareAtPrice.amount).toFixed(2)} ${variant.compareAtPrice.currencyCode}`}
+                  {`$${Number(currentVariant.compareAtPrice.amount).toFixed(2)} ${currentVariant.compareAtPrice.currencyCode}`}
                 </span>
               )}
             </div>
@@ -144,19 +184,65 @@ export default function ProductQuickView({handle, gid, open, onClose}) {
           <div style={statGridStyle}>
             <Stat label="Width" value={`${product?.featuredImage?.width ?? '—'} px`} />
             <Stat label="Height" value={`${product?.featuredImage?.height ?? '—'} px`} />
-            <Stat label="In Stock" value={variant?.availableForSale ? 'Yes' : 'No'} />
+            <Stat label="In Stock" value={currentVariant?.availableForSale ? 'Yes' : 'No'} />
             <Stat label="ID" value={product?.id?.split('/')?.pop()?.slice(-6) ?? '—'} />
           </div>
+          {printifySizes.length > 0 && (
+            <div style={{marginTop:'0.5rem'}}>
+              <label style={{display:'block', opacity:0.8, fontSize:'.85rem', marginBottom:6}}>Production Size (Printify)</label>
+              <select value={printifySize} onChange={(e)=>setPrintifySize(e.target.value)} style={{
+                background:'transparent', color:'#fff', border:'1px solid rgba(255,255,255,0.2)', padding:'0.5rem 0.75rem', borderRadius:8
+              }}>
+                {printifySizes.map((s)=> (
+                  <option key={s} value={s} style={{color:'#000'}}>{s}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {sizeValues.length > 0 && (
+            <div style={{marginTop:'0.75rem'}}>
+              <label style={{display:'block', opacity:0.8, fontSize:'.85rem', marginBottom:6}}>Size</label>
+              <select onChange={onSizeChange} value={(currentVariant?.selectedOptions||[]).find(o=>o.name.toLowerCase()==='size')?.value || sizeValues[0]} style={{
+                background:'transparent', color:'#fff', border:'1px solid rgba(255,255,255,0.2)', padding:'0.5rem 0.75rem', borderRadius:8
+              }}>
+                {sizeValues.map((s) => (
+                  <option key={s} value={s} style={{color:'#000'}}>{s}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {sizeValues.length === 0 && (
+            <div style={{marginTop:'0.75rem'}}>
+              <label style={{display:'block', opacity:0.8, fontSize:'.85rem', marginBottom:6}}>Custom size (inches)</label>
+              <div style={{display:'flex', alignItems:'center', gap:8}}>
+                <input type="number" step="0.5" min="1" value={customW}
+                  onChange={(e)=>setCustomW(Math.max(1, Number(e.target.value||1)))}
+                  style={{width:100, padding:'0.5rem 0.6rem', borderRadius:8, border:'1px solid rgba(255,255,255,0.2)', background:'transparent', color:'#fff'}} />
+                <span style={{opacity:.7}}>×</span>
+                <div style={{minWidth:80, padding:'0.5rem 0.6rem', borderRadius:8, border:'1px solid rgba(255,255,255,0.2)'}}>
+                  {customH}
+                </div>
+                <span style={{opacity:.7}}>in</span>
+              </div>
+              <div style={{marginTop:6, opacity:.8, fontSize:'.85rem'}}>
+                Est. price: {formatEstPrice(customW, customH)}
+              </div>
+            </div>
+          )}
           <div style={descStyle} dangerouslySetInnerHTML={{__html: product?.descriptionHtml || ''}} />
-          {variant && (
+          {currentVariant && (
             <div style={{display: 'flex', gap: '1rem', marginTop: '1rem'}}>
               <AddToCartButton
-                lines={[{merchandiseId: variant.id, quantity: 1}]}
-                selectedVariant={variant}
-                disabled={!variant?.availableForSale}
+                lines={[{merchandiseId: currentVariant.id, quantity: 1}]}
+                selectedVariant={currentVariant}
+                disabled={!currentVariant?.availableForSale}
                 imageSrc={product?.featuredImage?.url}
+                attributes={{
+                  ...(sizeValues.length === 0 ? {CustomSize: `${customW} x ${customH} in`} : {}),
+                  ...(printifySize ? {PrintifySize: printifySize} : {}),
+                }}
               >
-                {variant?.availableForSale ? 'Add to Cart' : 'Sold Out'}
+                {currentVariant?.availableForSale ? 'Add to Cart' : 'Sold Out'}
               </AddToCartButton>
               {product?.handle && (
                 <Link to={`/products/${product.handle}`} style={detailsBtnStyle}>
@@ -192,6 +278,16 @@ export default function ProductQuickView({handle, gid, open, onClose}) {
         <div style={statValueStyle}>{value}</div>
       </div>
     );
+  }
+
+  function formatEstPrice(w, h) {
+    const RATE = 0.35; // USD per square inch (adjust via code if needed)
+    const area = Math.max(1, Number(w) * Number(h));
+    let price = area * RATE;
+    // clamp and round to .99 for display only
+    price = Math.max(20, Math.min(499, price));
+    price = Math.floor(price) + 0.99;
+    return `$${price.toFixed(2)} USD`;
   }
 }
 

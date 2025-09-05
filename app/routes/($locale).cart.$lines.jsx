@@ -33,11 +33,31 @@ export async function loader({params, context, request}) {
     ?.split(',')
     ?.filter(Boolean);
 
-  // create a cart
-  const result = await cart.create({
-    lines,
-    discountCodes,
-  });
+  // Optional line item attributes via querystring: attr_<Key>=<Value>
+  const attrs = [];
+  for (const [key, value] of url.searchParams.entries()) {
+    if (key.startsWith('attr_')) {
+      const attrKey = key.slice(5);
+      if (attrKey && value) attrs.push({key: attrKey, value});
+    }
+  }
+  if (attrs.length) {
+    for (const l of lines) l.attributes = attrs;
+  }
+
+  // Try to add to existing cart; fall back to create
+  let result;
+  try {
+    const id = cart.getCartId?.();
+    if (id) {
+      result = await cart.addLines(lines);
+    }
+    if (!result?.cart?.id) {
+      result = await cart.create({lines, discountCodes});
+    }
+  } catch {
+    result = await cart.create({lines, discountCodes});
+  }
 
   const cartResult = result.cart;
 

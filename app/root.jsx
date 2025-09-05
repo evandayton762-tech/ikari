@@ -7,6 +7,7 @@ import Nav from '~/components/Nav';
 const CartRevalidator = React.lazy(() => import('~/components/CartRevalidator.client'));
 const GlobalParticles = React.lazy(() => import('~/components/GlobalParticles.client'));
 import {CartMain} from '~/components/CartMain';
+const Toast = React.lazy(() => import('~/components/Toast.client'));
 // import {useOptimisticCart} from '@shopify/hydrogen';
 import {SEARCH_ENDPOINT, SearchFormPredictive} from '~/components/SearchFormPredictive';
 import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
@@ -178,6 +179,9 @@ function AppShell({data, location}) {
       {/* Hide fixed buttons when an aside is open to avoid overlaying the X close */}
       <React.Suspense fallback={null}>
         <CartRevalidator />
+      </React.Suspense>
+      <React.Suspense fallback={null}>
+        <Toast />
       </React.Suspense>
       {asideState?.type === 'closed' && <MobileButton />}
       {asideState?.type === 'closed' && <SearchButton />}

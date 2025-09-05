@@ -147,6 +147,9 @@ export default function Product() {
   const imgH = media?.height || 0;
   const isPortrait = imgH && imgW ? imgH >= imgW : false;
   const aspect = isPortrait ? '3 / 4' : '16 / 10';
+  const ratio = imgW && imgH ? imgW / imgH : 1;
+  const [customW, setCustomW] = useState(24);
+  const customH = Math.max(1, Math.round((customW / ratio) * 10) / 10);
 
   return (
     <div className="product-page"
@@ -255,7 +258,24 @@ export default function Product() {
                 ))}
               </select>
             </div>
-          ) : null}
+          ) : (
+            <div style={{display:'flex', alignItems:'center', gap: '.75rem', marginTop: '0.75rem'}}>
+              <div style={{opacity: 0.7, fontSize: '.85rem', width: 72}}>Custom Size</div>
+              <div style={{display:'flex', alignItems:'center', gap:8}}>
+                <input type="number" step="0.5" min="1" value={customW}
+                  onChange={(e)=>setCustomW(Math.max(1, Number(e.target.value||1)))}
+                  style={{width:100, padding:'0.5rem 0.6rem', borderRadius:8, border:'1px solid rgba(255,255,255,0.2)', background:'transparent', color:'#fff'}} />
+                <span style={{opacity:.7}}>×</span>
+                <div style={{minWidth:80, padding:'0.5rem 0.6rem', borderRadius:8, border:'1px solid rgba(255,255,255,0.2)'}}>
+                  {customH}
+                </div>
+                <span style={{opacity:.7}}>in</span>
+              </div>
+            </div>
+          )}
+
+          {/* Printify sizes (read-only) */}
+          <PrintifySizes handle={product.handle} />
 
           <div style={{display:'flex', gap: '0.75rem', marginTop: '0.9rem', alignItems:'center'}}>
             {selectedVariant?.id ? (
@@ -263,6 +283,7 @@ export default function Product() {
                 disabled={!selectedVariant.availableForSale}
                 lines={[{ merchandiseId: selectedVariant.id, quantity: qty }]}
                 selectedVariant={selectedVariant}
+                attributes={sizeOption ? undefined : {CustomSize: `${customW} x ${customH} in`}}
                 imageSrc={activeUrl}
                 style={{
                   background:'#ff4d00',
@@ -353,6 +374,28 @@ function Accordion({label, children, defaultOpen=false}) {
       </button>
       <div style={{maxHeight: open ? '800px' : 0, overflow:'hidden', transition:'max-height .3s ease'}}>
         <div style={{padding:'0 0 0.75rem 0', opacity:0.9}}>{children}</div>
+      </div>
+    </div>
+  );
+}
+
+function PrintifySizes({handle}) {
+  const [sizes, setSizes] = useState([]);
+  useEffect(() => {
+    if (!handle) return;
+    fetch(`/api.printify/sizes/${encodeURIComponent(handle)}`)
+      .then((r) => r.json())
+      .then((j) => setSizes(Array.isArray(j?.sizes) ? j.sizes : []))
+      .catch(() => {});
+  }, [handle]);
+  if (!sizes.length) return null;
+  return (
+    <div style={{marginTop: '.75rem'}}>
+      <div style={{opacity:0.7, fontSize:'.85rem', marginBottom:6}}>Production sizes (Printify)</div>
+      <div style={{display:'flex', flexWrap:'wrap', gap:8}}>
+        {sizes.map((s) => (
+          <span key={s} style={{border:'1px solid rgba(255,255,255,0.2)', borderRadius:16, padding:'4px 8px', opacity:.9}}>{s}</span>
+        ))}
       </div>
     </div>
   );

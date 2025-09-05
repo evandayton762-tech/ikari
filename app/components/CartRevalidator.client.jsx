@@ -6,6 +6,20 @@ import {useFetchers} from '@remix-run/react';
 export default function CartRevalidator() {
   const fetchers = useFetchers();
 
+  // On mount, hydrate client cart from server cookie
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const r = await fetch('/api/cart', {credentials: 'include'});
+        const j = await r.json();
+        if (j?.cart) {
+          window.__lastCart = j.cart;
+          window.dispatchEvent(new CustomEvent('cart:updated', {detail: j.cart}));
+        }
+      } catch {}
+    })();
+  }, []);
+
   React.useEffect(() => {
     for (const f of fetchers) {
       const isCartAction = typeof f?.formAction === 'string' && /\/cart(\?.*)?$/.test(f.formAction);
