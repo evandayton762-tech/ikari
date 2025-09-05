@@ -33,7 +33,7 @@ export default function ThreeHero() {
   return (
     <Canvas
       camera={{ position: [0, 1.5, 1], fov: 10, near: 0.1, far: 100 }}
-      style={{ width: '100%', height: '100%' }}
+      style={{ width: '100%', height: '100%', touchAction: 'none' }}
     >
       <ParticleEffect count={999} radius={4.5} />
       <ambientLight intensity={0.8} />

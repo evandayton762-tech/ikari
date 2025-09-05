@@ -52,6 +52,7 @@ export default function Index() {
           zIndex: 5,
           pointerEvents: 'none',
         }}
+        data-home-title
       >
         IKARI
       </h1>
@@ -158,7 +159,7 @@ export default function Index() {
 
       {/* three scene (client-only, embedded) */}
       <ClientOnly>
-        <div id="three-container" style={{position:'absolute', inset:0, width:'100%', height:'100%', zIndex:5}}>
+        <div id="three-container" style={{position:'absolute', inset:0, width:'100%', height:'100%', zIndex:5}} className="touch-block">
           <Suspense fallback={null}>
             <ThreeHero />
           </Suspense>

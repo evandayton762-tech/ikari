@@ -9,6 +9,7 @@
 //  PRINTIFY_BLUEPRINT_ID=*** (e.g., Canvas/Poster blueprint)
 //  PRINTIFY_PROVIDER_ID=*** (preferred provider for the blueprint)
 
+import 'dotenv/config';
 import fs from 'fs';
 import path from 'path';
 

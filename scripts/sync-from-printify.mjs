@@ -19,6 +19,7 @@
  *   PRICE_MAX             (e.g. 199 — caps the price)
  *   DRY_RUN               (alias for !SYNC_APPLY)
  */
+import 'dotenv/config';
 
 const env = process.env;
 const APPLY = String(env.SYNC_APPLY || '').toLowerCase() === 'true' && !env.DRY_RUN;
@@ -205,4 +206,3 @@ main().catch((e) => {
   console.error(e);
   process.exit(1);
 });
-

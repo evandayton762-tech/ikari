@@ -137,7 +137,8 @@ function ThreeCatalogObject({ config, isActive, onClick }) {
             style: { 
               width: '100%', 
               height: '100%',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              touchAction: 'none'
             }
           }, [
             React.createElement('ambientLight', { key: 'ambient', intensity: 1.2 }),

@@ -78,7 +78,7 @@ export default function Catalog() {
       {/* Three.js Scene */}
       <Canvas
         camera={{position: [0, 1.5, 3], fov: 15, near: 0.1, far: 100}}
-        style={{width: '100%', height: '100%'}}
+        style={{width: '100%', height: '100%', touchAction: 'none'}}
       >
         <ParticleEffect count={400} radius={6} />
         <ambientLight intensity={0.6} />

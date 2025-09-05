@@ -14,6 +14,7 @@ import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 
 import resetUrl from '~/styles/reset.css?url';
 import appUrl from '~/styles/app.css?url';
+import responsiveUrl from '~/styles/responsive.css?url';
 import faviconUrl from '~/assets/favicon.svg';
 // (Deduped) CartRevalidator is loaded lazily above
 
@@ -22,6 +23,7 @@ export const links = () => [
   {rel: 'preconnect', href: 'https://cdn.shopify.com'},
   {rel: 'stylesheet', href: resetUrl},
   {rel: 'stylesheet', href: appUrl},
+  {rel: 'stylesheet', href: responsiveUrl},
   {rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'},
   {rel: 'icon', type: 'image/svg+xml', href: faviconUrl},
 ];
@@ -135,7 +137,7 @@ export default function App() {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <Meta />
         <Links />
         <style dangerouslySetInnerHTML={{__html: `

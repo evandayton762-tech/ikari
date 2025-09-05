@@ -81,22 +81,25 @@ function ThreeProductCard({ product }) {
   // No separate createRoot; render scene lazily directly below
 
   return (
-    <div style={{
+    <div className="shop-card" style={{
       position: 'relative',
-      width: '400px',
+      width: '100%',
+      maxWidth: '400px',
       marginBottom: '6rem'
     }}>
       <Link 
         to={`/products/${product.handle}`}
+        className="product-card-link touch-block"
         style={{
           position: 'relative',
-          width: '400px',
-          height: '400px',
+          width: '100%',
+          height: 'min(400px, 80vw)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           textDecoration: 'none',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          touchAction: 'none'
         }}
         // Prevent navigation when dragging/long-pressing to view 3D
         draggable={false}
@@ -147,8 +150,8 @@ function ThreeProductCard({ product }) {
         )}
 
         {isClient && imageLoaded && dimensions && (
-          <div
-            style={{ width: `${dimensions.width}px`, height: `${dimensions.height}px` }}
+          <div className="card-frame"
+            style={{ width: '100%', height: '100%', maxWidth: `${dimensions.width}px`, maxHeight: `${dimensions.height}px` }}
             onDragStart={(e) => e.preventDefault()}
           >
             <Suspense fallback={null}>
@@ -215,6 +218,7 @@ function ShopAllContent({ products = [], pageInfo = {}, currentPage = 1 }) {
   const [searchParams] = useSearchParams();
   const [sortBy, setSortBy] = useState('recommended');
   const [cursors, setCursors] = useState({});
+  const [cols, setCols] = useState(3);
 
   useEffect(() => {
     if (pageInfo.endCursor) {
@@ -225,18 +229,30 @@ function ShopAllContent({ products = [], pageInfo = {}, currentPage = 1 }) {
     }
   }, [currentPage, pageInfo.endCursor]);
 
+  // Responsive: adjust columns for tablet/phone
+  useEffect(() => {
+    const onResize = () => {
+      const w = window.innerWidth;
+      if (w <= 640) setCols(1);
+      else if (w <= 1024) setCols(2);
+      else setCols(3);
+    };
+    onResize();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
   const handleSort = (type) => {
     setSortBy(type);
   };
 
   return (
-    <div style={{
+    <div className="shop-page" style={{
       width: '100vw',
       minHeight: '100vh',
       background: '#000',
       position: 'relative',
-      overflow: 'auto',
-      padding: '2rem 4rem'
+      overflow: 'auto'
     }}>
       <div style={{
         position: 'fixed',
@@ -324,14 +340,13 @@ function ShopAllContent({ products = [], pageInfo = {}, currentPage = 1 }) {
         </div>
       </div>
 
-      <div style={{
+      <div className="shop-grid" style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, 400px)',
+        gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
         gap: '2rem',
         justifyContent: 'center',
         position: 'relative',
-        zIndex: 1,
-        paddingBottom: '8rem'
+        zIndex: 1
       }}>
         {products.map((product) => (
           <ThreeProductCard key={product.id} product={product} />

@@ -150,7 +150,7 @@ function CanvasPanel({url, depth = 0.14}) {
 export default function ProductScene({textureUrl, width, height}) {
   return (
     <Canvas
-      style={{width: '100%', height: '100%', cursor: 'grab'}}
+      style={{width: '100%', height: '100%', cursor: 'grab', touchAction: 'none'}}
       gl={{alpha: true, antialias: true, preserveDrawingBuffer: false}}
       dpr={[1, 1.5]}
       camera={{position: [0, 0, 2], fov: 50}}

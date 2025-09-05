@@ -176,7 +176,7 @@ export default function Product() {
       >← Back</button>
 
       <div style={{border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '1rem', background: '#0d0d0d', position:'relative', overflow:'hidden', zIndex:1}}>
-        <div style={{width: '100%', aspectRatio: aspect, maxHeight: isPortrait ? '66vh' : '78vh'}}>
+        <div className="touch-block" style={{width: '100%', aspectRatio: aspect, maxHeight: isPortrait ? '66vh' : '78vh'}}>
           <Suspense fallback={<div style={{padding: '2rem', color: '#888'}}>Loading…</div>}>
             {activeUrl ? (
               <ProductScene textureUrl={activeUrl} />

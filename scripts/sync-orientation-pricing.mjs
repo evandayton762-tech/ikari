@@ -17,6 +17,7 @@
  *   ORIENTATION_PRICE_PORTRAIT  (89.99)
  *   ORIENTATION_PRICE_SQUARE    (94.99)
  */
+import 'dotenv/config';
 
 const APPLY = String(process.env.SYNC_APPLY || '').toLowerCase() === 'true';
 const DOMAIN = process.env.SHOPIFY_STORE_DOMAIN;

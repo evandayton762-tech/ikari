@@ -1,0 +1,88 @@
+/* Global responsive and touch-behavior tweaks */
+
+/* Prevent accidental horizontal scrolling and scroll chaining */
+html, body {
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}
+
+/* Disable browser touch gestures inside interactive canvases */
+canvas, .touch-block {
+  touch-action: none;
+}
+
+/* Allow vertical scroll while blocking horizontal inside certain regions */
+.touch-pan-y {
+  touch-action: pan-y;
+}
+
+/* Homepage hero adjustments */
+@media (max-width: 640px) {
+  h1[data-home-title] {
+    font-size: 18vw !important;
+    line-height: 1.1 !important;
+  }
+}
+
+/* Shop page layout */
+.shop-page {
+  padding: 2rem 4rem;
+}
+
+@media (max-width: 1024px) {
+  .shop-page { padding: 1.5rem 2rem; }
+}
+
+@media (max-width: 640px) {
+  .shop-page { padding: 1rem; }
+  .shop-page h1 { font-size: 2.25rem !important; }
+}
+
+.shop-grid {
+  display: grid;
+  gap: 2rem;
+  justify-content: center;
+  padding-bottom: 8rem;
+}
+
+/* Default desktop: 3 columns */
+.shop-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* Tablet: 2 columns */
+@media (max-width: 1024px) {
+  .shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Phone: 1 column */
+@media (max-width: 640px) {
+  .shop-grid { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+}
+
+/* Cards flex to column width while capping at 400px */
+.shop-card,
+.shop-card > a,
+.shop-card .card-frame {
+  width: 100% !important;
+  max-width: 400px;
+}
+
+/* Square placeholder size on small screens */
+@media (max-width: 640px) {
+  .shop-card > a {
+    height: auto !important;
+  }
+}
+
+/* Product page: keep 3D area visible on phones */
+@media (max-width: 640px) {
+.product-page h1 { font-size: 1.5rem !important; }
+}
+
+/* Product page: collapse to single column on tablet/phone */
+@media (max-width: 1024px) {
+  .product-page {
+    grid-template-columns: 1fr !important;
+    padding: 5rem 1.25rem 2rem !important;
+    gap: 1.25rem !important;
+  }
+}
