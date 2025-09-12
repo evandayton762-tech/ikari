@@ -57,7 +57,8 @@ function ThreeCatalogObject({ config, isActive, onClick }) {
         const { createRoot } = await import('react-dom/client');
         const React = await import('react');
 
-        const resolveGlb = (key) => new URL(`../assets/${key}`, import.meta.url).href;
+        // Resolve to public models path so assets are served from /models/*.glb
+        const resolveGlb = (key) => `/models/${key}`;
 
         function GlbModel({ url, mul = 1 }) {
           const { scene } = useGLTF(url);

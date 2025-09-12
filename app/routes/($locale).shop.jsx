@@ -14,14 +14,51 @@ export async function loader({context, request}) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
   const page = parseInt(searchParams.get('page') || '1');
-  
+  const sort = searchParams.get('sort') || 'recommended';
+  const q = (searchParams.get('q') || '').trim();
+  const min = parseFloat(searchParams.get('min') || '');
+  const max = parseFloat(searchParams.get('max') || '');
+
+  // Build Shopify query string
+  let query = '';
+  if (q) query += `title:*${q}*`;
+  if (!Number.isNaN(min)) query += (query ? ' AND ' : '') + `variants.price:>=${min}`;
+  if (!Number.isNaN(max)) query += (query ? ' AND ' : '') + `variants.price:<=${max}`;
+
+  // Map sort to Shopify sortKey/reverse
+  /** @type {import('@shopify/hydrogen').ShopifyGid} */
+  let sortKey = undefined;
+  let reverse = false;
+  switch (sort) {
+    case 'newest':
+      sortKey = 'CREATED_AT';
+      reverse = true;
+      break;
+    case 'price-low':
+      sortKey = 'PRICE';
+      reverse = false;
+      break;
+    case 'price-high':
+      sortKey = 'PRICE';
+      reverse = true;
+      break;
+    case 'recommended':
+    default:
+      sortKey = q ? 'RELEVANCE' : 'BEST_SELLING';
+      reverse = false;
+      break;
+  }
+
   const startCursor = searchParams.get('cursor');
 
   try {
     const products = await storefront.query(PRODUCTS_QUERY, {
       variables: {
         first: PRODUCTS_PER_PAGE,
-        after: startCursor
+        after: startCursor,
+        sortKey,
+        reverse,
+        query: query || undefined,
       }
     });
     
@@ -215,8 +252,12 @@ function ThreeProductCard({ product }) {
 }
 
 function ShopAllContent({ products = [], pageInfo = {}, currentPage = 1 }) {
-  const [searchParams] = useSearchParams();
-  const [sortBy, setSortBy] = useState('recommended');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'recommended');
+  const [q, setQ] = useState(searchParams.get('q') || '');
+  const [min, setMin] = useState(searchParams.get('min') || '');
+  const [max, setMax] = useState(searchParams.get('max') || '');
+  const [showFilters, setShowFilters] = useState(false);
   const [cursors, setCursors] = useState({});
   const [cols, setCols] = useState(3);
 
@@ -244,6 +285,39 @@ function ShopAllContent({ products = [], pageInfo = {}, currentPage = 1 }) {
 
   const handleSort = (type) => {
     setSortBy(type);
+    const next = new URLSearchParams(searchParams);
+    next.set('sort', type);
+    next.set('page', '1');
+    next.delete('cursor');
+    setSearchParams(next);
+  };
+
+  const applyFilters = (e) => {
+    e.preventDefault();
+    const next = new URLSearchParams(searchParams);
+    if (q) next.set('q', q); else next.delete('q');
+    if (min) next.set('min', String(min)); else next.delete('min');
+    if (max) next.set('max', String(max)); else next.delete('max');
+    next.set('page', '1');
+    next.delete('cursor');
+    setSearchParams(next);
+    setShowFilters(false);
+  };
+
+  const clearFilters = () => {
+    setQ(''); setMin(''); setMax('');
+    const next = new URLSearchParams(searchParams);
+    next.delete('q'); next.delete('min'); next.delete('max');
+    next.set('page', '1');
+    next.delete('cursor');
+    setSearchParams(next);
+  };
+
+  const buildPageLink = (pageNum, cursor) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('page', String(pageNum));
+    if (cursor) next.set('cursor', cursor); else next.delete('cursor');
+    return `/shop?${next.toString()}`;
   };
 
   return (
@@ -292,7 +366,7 @@ function ShopAllContent({ products = [], pageInfo = {}, currentPage = 1 }) {
           alignItems: 'center',
           flexWrap: 'wrap'
         }}>
-          <button style={{
+          <button onClick={() => setShowFilters((v) => !v)} style={{
             background: 'transparent',
             border: '1px solid rgba(255,255,255,0.3)',
             color: '#fff',
@@ -340,6 +414,42 @@ function ShopAllContent({ products = [], pageInfo = {}, currentPage = 1 }) {
         </div>
       </div>
 
+      {showFilters && (
+        <form onSubmit={applyFilters} style={{
+          display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(180px, 1fr))', gap:'0.75rem',
+          marginBottom: '1.25rem', position:'relative', zIndex:1
+        }}>
+          <input
+            type="search" placeholder="Search title..." value={q}
+            onChange={(e)=>setQ(e.target.value)}
+            style={{
+              background:'transparent', color:'#fff', border:'1px solid rgba(255,255,255,0.3)',
+              padding:'0.75rem 0.9rem', borderRadius:8
+            }}
+          />
+          <input
+            inputMode="decimal" type="number" step="0.01" min="0" placeholder="Min price"
+            value={min} onChange={(e)=>setMin(e.target.value)}
+            style={{ background:'transparent', color:'#fff', border:'1px solid rgba(255,255,255,0.3)', padding:'0.75rem 0.9rem', borderRadius:8 }}
+          />
+          <input
+            inputMode="decimal" type="number" step="0.01" min="0" placeholder="Max price"
+            value={max} onChange={(e)=>setMax(e.target.value)}
+            style={{ background:'transparent', color:'#fff', border:'1px solid rgba(255,255,255,0.3)', padding:'0.75rem 0.9rem', borderRadius:8 }}
+          />
+          <div style={{display:'flex', gap:'0.5rem'}}>
+            <button type="submit" style={{
+              background:'#ff4d00', color:'#000', border:'1px solid #ff864d', padding:'0.75rem 1.1rem', borderRadius:8,
+              textTransform:'uppercase', letterSpacing:'.1em', cursor:'pointer'
+            }}>Apply</button>
+            <button type="button" onClick={clearFilters} style={{
+              background:'transparent', color:'#fff', border:'1px solid rgba(255,255,255,0.3)', padding:'0.75rem 1.1rem', borderRadius:8,
+              textTransform:'uppercase', letterSpacing:'.1em', cursor:'pointer'
+            }}>Reset</button>
+          </div>
+        </form>
+      )}
+
       <div className="shop-grid" style={{
         display: 'grid',
         gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
@@ -364,7 +474,7 @@ function ShopAllContent({ products = [], pageInfo = {}, currentPage = 1 }) {
       }}>
         {currentPage > 1 && (
           <Link
-            to={currentPage === 2 ? '/shop' : `/shop?page=${currentPage - 1}${cursors[currentPage - 2] ? `&cursor=${cursors[currentPage - 2]}` : ''}`}
+            to={buildPageLink(currentPage - 1, cursors[currentPage - 2])}
             style={{
               background: 'transparent',
               border: '1px solid rgba(255,255,255,0.3)',
@@ -396,7 +506,7 @@ function ShopAllContent({ products = [], pageInfo = {}, currentPage = 1 }) {
 
         {pageInfo.hasNextPage && (
           <Link
-            to={`/shop?page=${currentPage + 1}${pageInfo.endCursor ? `&cursor=${pageInfo.endCursor}` : ''}`}
+            to={buildPageLink(currentPage + 1, pageInfo.endCursor)}
             style={{
               background: 'transparent',
               border: '1px solid rgba(255,255,255,0.3)',
@@ -416,7 +526,7 @@ function ShopAllContent({ products = [], pageInfo = {}, currentPage = 1 }) {
         )}
       </div>
 
-      <div style={{
+      <div className="shop-footer-row" style={{
         marginTop: '6rem',
         padding: '2rem 0',
         borderTop: '1px solid rgba(255,255,255,0.1)',
@@ -456,8 +566,8 @@ export default function Shop() {
 }
 
 const PRODUCTS_QUERY = `#graphql
-  query Products($first: Int, $after: String) {
-    products(first: $first, after: $after) {
+  query Products($first: Int, $after: String, $sortKey: ProductSortKeys, $reverse: Boolean, $query: String) {
+    products(first: $first, after: $after, sortKey: $sortKey, reverse: $reverse, query: $query) {
       nodes {
         id
         title

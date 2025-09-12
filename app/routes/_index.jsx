@@ -39,17 +39,17 @@ export default function Index() {
       <h1
         style={{
           position: 'absolute',
-          top: '27%',
+          top: 'var(--home-title-top, 27%)',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          fontSize: '25vw',
-          lineHeight: 1.5,
+          fontSize: 'var(--home-title-size, 25vw)',
+          lineHeight: 'var(--home-title-line, 1.5)',
           fontFamily: 'Arial Black, sans-serif',
           fontWeight: 900,
           letterSpacing: '0.06em',
           color: '#fff',
           margin: 0,
-          zIndex: 5,
+          zIndex: 10,
           pointerEvents: 'none',
         }}
         data-home-title
@@ -71,6 +71,7 @@ export default function Index() {
           letterSpacing: '0.2em',
           zIndex: 50,
         }}
+        className="home-topleft"
       >
         <div style={{ color: '#666' }}>Arizona</div>
         <div style={{ color: '#666' }}>50° 27′0.0036″ N</div>
@@ -92,6 +93,7 @@ export default function Index() {
           textAlign: 'right',
           zIndex: 50,
         }}
+        className="home-topright"
       >
         <div style={{ color: '#666' }}>Creating</div>
         <div style={{ color: '#fff' }}>Memorable</div>
@@ -107,6 +109,7 @@ export default function Index() {
           left: '4rem',
           zIndex: 20,
         }}
+        className="home-bottomleft"
       >
         <div
           style={{
@@ -142,6 +145,7 @@ export default function Index() {
           transition: 'all 0.3s ease',
           zIndex: 20,
         }}
+        className="home-bottomright"
         onMouseEnter={(e) => {
           e.currentTarget.style.backgroundColor = '#fff';
           e.currentTarget.style.color = '#000';

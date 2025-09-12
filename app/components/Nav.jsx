@@ -72,8 +72,9 @@ export default function Nav({color = '#fff', invertLogo = color !== '#000'}) {
         alignItems: 'center',
         zIndex: 200,
       }}
+      className="nav-root"
     >
-      <ul style={listStyle}>
+      <ul style={listStyle} className="nav-list">
         {leftLinks.map(([label, to], i) => (
           <li key={to}>
             <Link to={to} style={anchorStyle}>
@@ -94,11 +95,12 @@ export default function Nav({color = '#fff', invertLogo = color !== '#000'}) {
               marginTop: '.2em',
               filter: invertLogo ? 'invert(100%)' : 'none',
             }}
+            className="nav-logo"
           />
         </Link>
       </div>
 
-      <ul style={listStyle}>
+      <ul style={listStyle} className="nav-list">
         {rightLinks.map(([label, to], i) => (
           <li key={to}>
             <Link to={to} style={anchorStyle}>
@@ -180,6 +182,7 @@ function ScrambleText({text, color}) {
       onMouseEnter={start}
       onMouseLeave={stop}
       style={{...linkStyle, color}}
+      className="nav-link"
     >
       {display}
     </span>

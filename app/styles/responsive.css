@@ -19,8 +19,50 @@ canvas, .touch-block {
 /* Homepage hero adjustments */
 @media (max-width: 640px) {
   h1[data-home-title] {
-    font-size: 18vw !important;
-    line-height: 1.1 !important;
+    --home-title-size: 36vw;
+    --home-title-line: 1.08;
+    --home-title-top: 22%;
+  }
+}
+
+/* Hide top overlays on phones */
+@media (max-width: 640px) {
+  .home-topleft,
+  .home-topright { display: none !important; }
+}
+
+/* Home overlays on phones */
+@media (max-width: 640px) {
+  .home-topleft {
+    top: max(0.5rem, env(safe-area-inset-top)) !important;
+    left: max(0.5rem, env(safe-area-inset-left)) !important;
+    font-size: 0.6rem !important;
+    column-gap: 0.4rem !important;
+    row-gap: 0.2rem !important;
+    flex-wrap: wrap !important;
+    max-width: 50vw !important;
+  }
+  .home-topright {
+    top: max(0.5rem, env(safe-area-inset-top)) !important;
+    right: max(0.5rem, env(safe-area-inset-right)) !important;
+    font-size: 0.6rem !important;
+    column-gap: 0.5rem !important;
+    row-gap: 0.25rem !important;
+    flex-wrap: wrap !important;
+    max-width: 48vw !important;
+    text-align: right !important;
+    justify-content: flex-end !important;
+  }
+  .home-bottomleft {
+    bottom: max(0.5rem, env(safe-area-inset-bottom)) !important;
+    left: max(0.5rem, env(safe-area-inset-left)) !important;
+  }
+  .home-bottomright {
+    bottom: max(0.5rem, env(safe-area-inset-bottom)) !important;
+    right: max(0.5rem, env(safe-area-inset-right)) !important;
+    width: 64px !important;
+    height: 64px !important;
+    font-size: 0.7rem !important;
   }
 }
 
@@ -42,6 +84,7 @@ canvas, .touch-block {
   display: grid;
   gap: 2rem;
   justify-content: center;
+  justify-items: center;
   padding-bottom: 8rem;
 }
 
@@ -71,6 +114,7 @@ canvas, .touch-block {
   .shop-card > a {
     height: auto !important;
   }
+  .shop-footer-row { font-size: 0.7rem !important; padding: 0 1rem !important; }
 }
 
 /* Product page: keep 3D area visible on phones */
@@ -85,4 +129,12 @@ canvas, .touch-block {
     padding: 5rem 1.25rem 2rem !important;
     gap: 1.25rem !important;
   }
+}
+
+/* Nav adjustments on phones */
+@media (max-width: 640px) {
+  .nav-root { top: 0.25rem !important; }
+  .nav-list { gap: 0.8rem !important; }
+  .nav-logo { width: 2rem !important; height: 2rem !important; }
+  .nav-link { width: 9ch !important; font-size: 0.72rem !important; letter-spacing: 0.14em !important; }
 }
