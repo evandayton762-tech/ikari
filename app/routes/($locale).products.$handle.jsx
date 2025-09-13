@@ -1,10 +1,10 @@
-import React, {Suspense, lazy, useEffect, useMemo, useState} from 'react';
+import React, {Suspense, lazy, useEffect, useState} from 'react';
 import {useLoaderData, useNavigate, Link} from '@remix-run/react';
 import {
   getSelectedProductOptions,
   Analytics,
   useOptimisticVariant,
-  getProductOptions,
+  
   getAdjacentAndFirstAvailableVariants,
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
@@ -95,11 +95,6 @@ export default function Product() {
 
   useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
 
-  const productOptions = getProductOptions({
-    ...product,
-    selectedOrFirstAvailableVariant: selectedVariant,
-  });
-
   const {title, descriptionHtml} = product;
 
   const images = product?.images?.nodes || [];
@@ -121,35 +116,11 @@ export default function Product() {
     userSelect: 'none',
   };
 
-  const sizeOption = useMemo(() => {
-    return productOptions.find((o) => o.name.toLowerCase() === 'size');
-  }, [productOptions]);
-
-  function onSizeChange(e) {
-    const value = e.target.value;
-    const option = sizeOption;
-    if (!option) return;
-    const target = option.optionValues.find((v) => v.name === value);
-    if (target && target.exists) {
-      if (target.isDifferentProduct) {
-        navigate(`/products/${target.handle}?${target.variantUriQuery}`, {
-          replace: true,
-          preventScrollReset: true,
-        });
-      } else if (!target.selected) {
-        navigate(`?${target.variantUriQuery}`, {replace: true, preventScrollReset: true});
-      }
-    }
-  }
-
   const media = selectedVariant?.image || product?.featuredImage || {};
   const imgW = media?.width || 0;
   const imgH = media?.height || 0;
   const isPortrait = imgH && imgW ? imgH >= imgW : false;
   const aspect = isPortrait ? '3 / 4' : '16 / 10';
-  const ratio = imgW && imgH ? imgW / imgH : 1;
-  const [customW, setCustomW] = useState(24);
-  const customH = Math.max(1, Math.round((customW / ratio) * 10) / 10);
 
   return (
     <div className="product-page"
@@ -246,48 +217,10 @@ export default function Product() {
             </div>
           </div>
 
-          {sizeOption ? (
-            <div style={{display:'flex', alignItems:'center', gap: '.75rem', marginTop: '0.75rem'}}>
-              <div style={{opacity: 0.7, fontSize: '.85rem', width: 72}}>Size</div>
-              <select onChange={onSizeChange} value={sizeOption.optionValues.find(v=>v.selected)?.name || (sizeOption.optionValues[0]?.name || '')}
-                style={{background:'transparent', color:'#fff', border:'1px solid rgba(255,255,255,0.2)', padding:'0.5rem 0.75rem', borderRadius:8}}>
-                {sizeOption.optionValues.map((v) => (
-                  <option key={v.name} value={v.name} disabled={!v.exists} style={{color:'#000'}}>
-                    {v.name}{!v.available ? ' (unavailable)' : ''}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <div style={{marginTop: '0.75rem'}}>
-              <div style={{display:'flex', alignItems:'center', gap: '.75rem'}}>
-                <div style={{opacity: 0.7, fontSize: '.85rem', width: 72}}>Custom Size</div>
-                <div style={{display:'flex', alignItems:'center', gap:8}}>
-                  <input type="number" step="0.5" min="1" value={customW}
-                    onChange={(e)=>setCustomW(Math.max(1, Number(e.target.value||1)))}
-                    style={{width:100, padding:'0.5rem 0.6rem', borderRadius:8, border:'1px solid rgba(255,255,255,0.2)', background:'transparent', color:'#fff'}} />
-                  <span style={{opacity:.7}}>×</span>
-                  <div style={{minWidth:80, padding:'0.5rem 0.6rem', borderRadius:8, border:'1px solid rgba(255,255,255,0.2)'}}>
-                    {customH}
-                  </div>
-                  <span style={{opacity:.7}}>in</span>
-                </div>
-              </div>
-              <div style={{marginTop:6, opacity:.8, fontSize:'.85rem'}}>
-                Estimated price: {formatEstPrice(customW, customH)}
-              </div>
-            </div>
-          )}
-
-          {/* Printify sizes (read-only) */}
-          <PrintifySizes handle={product.handle} />
+          {/* Size selection removed: one fixed size per artwork */}
 
           {/* Print type selector (Printify-backed) */}
-          <PrintifyTypes
-            handle={product.handle}
-            productTitle={title}
-            selectedSize={sizeOption?.optionValues?.find((v)=>v.selected)?.name || ''}
-          />
+          <PrintifyTypes handle={product.handle} productTitle={title} />
 
           <div style={{display:'flex', gap: '0.75rem', marginTop: '0.9rem', alignItems:'center'}}>
             {selectedVariant?.id ? (
@@ -295,7 +228,6 @@ export default function Product() {
                 disabled={!selectedVariant.availableForSale}
                 lines={[{ merchandiseId: selectedVariant.id, quantity: qty }]}
                 selectedVariant={selectedVariant}
-                attributes={sizeOption ? undefined : {CustomSize: `${customW} x ${customH} in`, EstimatedPrice: formatEstPrice(customW, customH)}}
                 imageSrc={activeUrl}
                 style={{
                   background:'#ff4d00',
@@ -367,15 +299,6 @@ export default function Product() {
   );
 }
 
-function formatEstPrice(w, h) {
-  const RATE = 0.35; // USD per square inch; adjust as needed or derive from env
-  const area = Math.max(1, Number(w) * Number(h));
-  let price = area * RATE;
-  price = Math.max(20, Math.min(499, price));
-  price = Math.floor(price) + 0.99;
-  return `$${price.toFixed(2)} USD`;
-}
-
 function Metafield({html, fallbacks = []}) {
   const value = html || fallbacks.find(Boolean) || '';
   if (!value) return <div style={{opacity:0.6}}>No details yet.</div>;
@@ -400,27 +323,7 @@ function Accordion({label, children, defaultOpen=false}) {
   );
 }
 
-function PrintifySizes({handle}) {
-  const [sizes, setSizes] = useState([]);
-  useEffect(() => {
-    if (!handle) return;
-    fetch(`/api.printify/sizes/${encodeURIComponent(handle)}`)
-      .then((r) => r.json())
-      .then((j) => setSizes(Array.isArray(j?.sizes) ? j.sizes : []))
-      .catch(() => {});
-  }, [handle]);
-  if (!sizes.length) return null;
-  return (
-    <div style={{marginTop: '.75rem'}}>
-      <div style={{opacity:0.7, fontSize:'.85rem', marginBottom:6}}>Production sizes (Printify)</div>
-      <div style={{display:'flex', flexWrap:'wrap', gap:8}}>
-        {sizes.map((s) => (
-          <span key={s} style={{border:'1px solid rgba(255,255,255,0.2)', borderRadius:16, padding:'4px 8px', opacity:.9}}>{s}</span>
-        ))}
-      </div>
-    </div>
-  );
-}
+// Size list removed — fixed size per artwork
 
 function PrintifyTypes({handle, productTitle, selectedSize}) {
   const [types, setTypes] = useState([]);
