@@ -277,6 +277,13 @@ export default function Product() {
           {/* Printify sizes (read-only) */}
           <PrintifySizes handle={product.handle} />
 
+          {/* Print type selector (Printify-backed) */}
+          <PrintifyTypes
+            handle={product.handle}
+            productTitle={title}
+            selectedSize={sizeOption?.optionValues?.find((v)=>v.selected)?.name || ''}
+          />
+
           <div style={{display:'flex', gap: '0.75rem', marginTop: '0.9rem', alignItems:'center'}}>
             {selectedVariant?.id ? (
               <AddToCartButton
@@ -396,6 +403,56 @@ function PrintifySizes({handle}) {
         {sizes.map((s) => (
           <span key={s} style={{border:'1px solid rgba(255,255,255,0.2)', borderRadius:16, padding:'4px 8px', opacity:.9}}>{s}</span>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function PrintifyTypes({handle, productTitle, selectedSize}) {
+  const [types, setTypes] = useState([]);
+  const [value, setValue] = useState('');
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!handle) return;
+    fetch(`/api.printify/types/${encodeURIComponent(handle)}`)
+      .then((r) => r.json())
+      .then((j) => {
+        if (Array.isArray(j?.types) && j.types.length) {
+          setTypes(j.types);
+          setValue(j.types[0]?.label || '');
+        }
+      })
+      .catch(() => {});
+  }, [handle]);
+
+  if (!types.length) return null;
+  return (
+    <div style={{marginTop: '.75rem'}}>
+      <div style={{opacity:0.7, fontSize:'.85rem', marginBottom:6}}>Print Type</div>
+      <div style={{display:'flex', alignItems:'center', gap: '.75rem'}}>
+        <select
+          value={value}
+          onChange={(e) => {
+            const next = e.target.value;
+            setValue(next);
+            const match = types.find((t) => t.label === next);
+            if (match?.shopifyHandle) {
+              const q = selectedSize ? `?size=${encodeURIComponent(selectedSize)}` : '';
+              navigate(`/products/${match.shopifyHandle}${q}`, {replace: true, preventScrollReset: true});
+            } else if (productTitle) {
+              const q = encodeURIComponent(`${productTitle} ${next}`);
+              navigate(`/search?q=${q}`);
+            }
+          }}
+          style={{background:'transparent', color:'#fff', border:'1px solid rgba(255,255,255,0.2)', padding:'0.5rem 0.75rem', borderRadius:8}}
+        >
+          {types.map((t) => (
+            <option key={t.label} value={t.label} style={{color:'#000'}}>{t.label}</option>
+          ))}
+        </select>
+        {!types.some((t)=>t.shopifyHandle) && (
+          <span style={{opacity:.65, fontSize:'.8rem'}}>We’ll search for this type</span>
+        )}
       </div>
     </div>
   );
