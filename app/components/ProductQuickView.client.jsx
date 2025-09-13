@@ -214,17 +214,18 @@ export default function ProductQuickView({handle, gid, open, onClose}) {
 }
 
 function PrintTypeSelectorQuick({productTitle, productHandle}) {
-  const [types, setTypes] = useState([]);
-  const [value, setValue] = useState('');
+  const defaultTypes = ['Canvas', 'Framed Canvas', 'Poster'];
+  const [types, setTypes] = useState(defaultTypes.map((label) => ({label, shopifyHandle: null})));
+  const [value, setValue] = useState(defaultTypes[0]);
   const navigate = useNavigate();
   useEffect(() => {
     if (!productHandle) return;
     fetch(`/api.printify/types/${encodeURIComponent(productHandle)}`)
-      .then((r) => r.json())
+      .then((r) => r.ok ? r.json() : null)
       .then((j) => {
-        if (Array.isArray(j?.types) && j.types.length) {
+        if (j && Array.isArray(j?.types) && j.types.length) {
           setTypes(j.types);
-          setValue(j.types[0]?.label || '');
+          setValue(j.types[0]?.label || defaultTypes[0]);
         }
       })
       .catch(() => {});

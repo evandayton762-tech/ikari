@@ -326,23 +326,28 @@ function Accordion({label, children, defaultOpen=false}) {
 // Size list removed — fixed size per artwork
 
 function PrintifyTypes({handle, productTitle, selectedSize}) {
-  const [types, setTypes] = useState([]);
-  const [value, setValue] = useState('');
+  // Default to common materials so the dropdown is always visible
+  const defaultTypes = ['Canvas', 'Framed Canvas', 'Poster'];
+  const [types, setTypes] = useState(defaultTypes.map((label) => ({label, shopifyHandle: null})));
+  const [value, setValue] = useState(defaultTypes[0]);
   const navigate = useNavigate();
   useEffect(() => {
     if (!handle) return;
     fetch(`/api.printify/types/${encodeURIComponent(handle)}`)
-      .then((r) => r.json())
+      .then((r) => r.ok ? r.json() : null)
       .then((j) => {
-        if (Array.isArray(j?.types) && j.types.length) {
+        if (j && Array.isArray(j?.types) && j.types.length) {
           setTypes(j.types);
-          setValue(j.types[0]?.label || '');
+          if (!value) setValue(j.types[0]?.label || '');
+        } else {
+          if (!value) setValue(defaultTypes[0]);
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        if (!value) setValue(defaultTypes[0]);
+      });
   }, [handle]);
 
-  if (!types.length) return null;
   return (
     <div style={{marginTop: '.75rem'}}>
       <div style={{opacity:0.7, fontSize:'.85rem', marginBottom:6}}>Print Type</div>
