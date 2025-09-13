@@ -49,7 +49,9 @@ export default function Index() {
           letterSpacing: '0.06em',
           color: '#fff',
           margin: 0,
-          zIndex: 10,
+          // Keep the title above the Three.js canvas (zIndex: 5)
+          // but below other UI overlays (20, 50, nav at 200, etc.)
+          zIndex: 6,
           pointerEvents: 'none',
         }}
         data-home-title
