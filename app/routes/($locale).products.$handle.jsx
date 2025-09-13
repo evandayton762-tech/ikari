@@ -219,8 +219,7 @@ export default function Product() {
 
           {/* Size selection removed: one fixed size per artwork */}
 
-          {/* Print type selector (Printify-backed) */}
-          <PrintifyTypes handle={product.handle} productTitle={title} />
+          {/* Print type selector temporarily disabled until Printify is approved */}
 
           <div style={{display:'flex', gap: '0.75rem', marginTop: '0.9rem', alignItems:'center'}}>
             {selectedVariant?.id ? (
@@ -361,19 +360,20 @@ function PrintifyTypes({handle, productTitle, selectedSize}) {
             if (match?.shopifyHandle) {
               const q = selectedSize ? `?selectedOptions%5BSize%5D=${encodeURIComponent(selectedSize)}` : '';
               navigate(`/products/${match.shopifyHandle}${q}`, {replace: true, preventScrollReset: true});
-            } else if (productTitle) {
-              const q = encodeURIComponent(`${productTitle} ${next}`);
-              navigate(`/search?q=${q}`);
+            } else {
+              // No mapped product for this type; keep user on page
             }
           }}
           style={{background:'transparent', color:'#fff', border:'1px solid rgba(255,255,255,0.2)', padding:'0.5rem 0.75rem', borderRadius:8}}
         >
           {types.map((t) => (
-            <option key={t.label} value={t.label} style={{color:'#000'}}>{t.label}</option>
+            <option key={t.label} value={t.label} disabled={!t.shopifyHandle && t.label !== value} style={{color:'#000'}}>
+              {t.label}{!t.shopifyHandle && t.label !== value ? ' (unavailable)' : ''}
+            </option>
           ))}
         </select>
-        {!types.some((t)=>t.shopifyHandle) && (
-          <span style={{opacity:.65, fontSize:'.8rem'}}>We’ll search for this type</span>
+        {!types.some((t)=>t.shopifyHandle && t.label !== value) && (
+          <span style={{opacity:.65, fontSize:'.8rem'}}>Other materials coming soon</span>
         )}
       </div>
     </div>

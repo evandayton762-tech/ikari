@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useFetcher, Link, useNavigate} from '@remix-run/react';
+import {useFetcher, Link} from '@remix-run/react';
 import {useAside} from '~/components/Aside';
 import ProductScene from '~/components/ProductScene.client';
 import {AddToCartButton} from '~/components/AddToCartButton';
@@ -160,8 +160,7 @@ export default function ProductQuickView({handle, gid, open, onClose}) {
             <Stat label="In Stock" value={currentVariant?.availableForSale ? 'Yes' : 'No'} />
             <Stat label="ID" value={product?.id?.split('/')?.pop()?.slice(-6) ?? '—'} />
           </div>
-          {/* Size list removed */}
-          <PrintTypeSelectorQuick productTitle={product?.title} productHandle={product?.handle} />
+          {/* Print type selector temporarily disabled until Printify is approved */}
           {/* No size or custom size controls */}
           <div style={descStyle} dangerouslySetInnerHTML={{__html: product?.descriptionHtml || ''}} />
           {currentVariant && (
@@ -213,49 +212,7 @@ export default function ProductQuickView({handle, gid, open, onClose}) {
   // Removed estimated price helper; variant price is authoritative
 }
 
-function PrintTypeSelectorQuick({productTitle, productHandle}) {
-  const defaultTypes = ['Canvas', 'Framed Canvas', 'Poster'];
-  const [types, setTypes] = useState(defaultTypes.map((label) => ({label, shopifyHandle: null})));
-  const [value, setValue] = useState(defaultTypes[0]);
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!productHandle) return;
-    fetch(`/api.printify/types/${encodeURIComponent(productHandle)}`)
-      .then((r) => r.ok ? r.json() : null)
-      .then((j) => {
-        if (j && Array.isArray(j?.types) && j.types.length) {
-          setTypes(j.types);
-          setValue(j.types[0]?.label || defaultTypes[0]);
-        }
-      })
-      .catch(() => {});
-  }, [productHandle]);
-  if (!types.length) return null;
-  return (
-    <div style={{marginTop:'0.75rem'}}>
-      <label style={{display:'block', opacity:0.8, fontSize:'.85rem', marginBottom:6}}>Print Type</label>
-      <div style={{display:'flex', alignItems:'center', gap:8}}>
-        <select
-          value={value}
-          onChange={(e) => {
-            const next = e.target.value; setValue(next);
-            const match = types.find((t) => t.label === next);
-            if (match?.shopifyHandle) {
-              navigate(`/products/${match.shopifyHandle}`);
-            } else if (productTitle) {
-              navigate(`/search?q=${encodeURIComponent(productTitle + ' ' + next)}`);
-            }
-          }}
-          style={{background:'transparent', color:'#fff', border:'1px solid rgba(255,255,255,0.2)', padding:'0.5rem 0.75rem', borderRadius:8}}
-        >
-          {types.map((t) => (
-            <option key={t.label} value={t.label} style={{color:'#000'}}>{t.label}</option>
-          ))}
-        </select>
-      </div>
-    </div>
-  );
-}
+// PrintTypeSelectorQuick removed for now
 
 /**
  * @typedef {{

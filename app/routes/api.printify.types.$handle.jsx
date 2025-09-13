@@ -67,8 +67,16 @@ export async function loader({params, request, context}) {
     seenLabels.add(r.label);
     uniq.push(r);
   }
-
-  return json({ok:true, types: uniq, title: product.title});
+  // Ensure current product type is present and selectable
+  const currentLabel = inferTypeFromTitle(product.title) || 'Canvas';
+  const existing = uniq.find((x) => x.label === currentLabel);
+  if (existing) {
+    if (!existing.shopifyHandle) existing.shopifyHandle = product.handle;
+    // Move current type to the top
+    const rest = uniq.filter((x) => x.label !== currentLabel);
+    return json({ok:true, types: [{label: currentLabel, shopifyHandle: product.handle}, ...rest], title: product.title});
+  }
+  return json({ok:true, types: [{label: currentLabel, shopifyHandle: product.handle}, ...uniq], title: product.title});
 }
 
 const DEFAULT_TYPES = ['Canvas', 'Framed Canvas', 'Poster'];
