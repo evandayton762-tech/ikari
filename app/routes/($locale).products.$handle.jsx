@@ -259,17 +259,22 @@ export default function Product() {
               </select>
             </div>
           ) : (
-            <div style={{display:'flex', alignItems:'center', gap: '.75rem', marginTop: '0.75rem'}}>
-              <div style={{opacity: 0.7, fontSize: '.85rem', width: 72}}>Custom Size</div>
-              <div style={{display:'flex', alignItems:'center', gap:8}}>
-                <input type="number" step="0.5" min="1" value={customW}
-                  onChange={(e)=>setCustomW(Math.max(1, Number(e.target.value||1)))}
-                  style={{width:100, padding:'0.5rem 0.6rem', borderRadius:8, border:'1px solid rgba(255,255,255,0.2)', background:'transparent', color:'#fff'}} />
-                <span style={{opacity:.7}}>×</span>
-                <div style={{minWidth:80, padding:'0.5rem 0.6rem', borderRadius:8, border:'1px solid rgba(255,255,255,0.2)'}}>
-                  {customH}
+            <div style={{marginTop: '0.75rem'}}>
+              <div style={{display:'flex', alignItems:'center', gap: '.75rem'}}>
+                <div style={{opacity: 0.7, fontSize: '.85rem', width: 72}}>Custom Size</div>
+                <div style={{display:'flex', alignItems:'center', gap:8}}>
+                  <input type="number" step="0.5" min="1" value={customW}
+                    onChange={(e)=>setCustomW(Math.max(1, Number(e.target.value||1)))}
+                    style={{width:100, padding:'0.5rem 0.6rem', borderRadius:8, border:'1px solid rgba(255,255,255,0.2)', background:'transparent', color:'#fff'}} />
+                  <span style={{opacity:.7}}>×</span>
+                  <div style={{minWidth:80, padding:'0.5rem 0.6rem', borderRadius:8, border:'1px solid rgba(255,255,255,0.2)'}}>
+                    {customH}
+                  </div>
+                  <span style={{opacity:.7}}>in</span>
                 </div>
-                <span style={{opacity:.7}}>in</span>
+              </div>
+              <div style={{marginTop:6, opacity:.8, fontSize:'.85rem'}}>
+                Estimated price: {formatEstPrice(customW, customH)}
               </div>
             </div>
           )}
@@ -290,7 +295,7 @@ export default function Product() {
                 disabled={!selectedVariant.availableForSale}
                 lines={[{ merchandiseId: selectedVariant.id, quantity: qty }]}
                 selectedVariant={selectedVariant}
-                attributes={sizeOption ? undefined : {CustomSize: `${customW} x ${customH} in`}}
+                attributes={sizeOption ? undefined : {CustomSize: `${customW} x ${customH} in`, EstimatedPrice: formatEstPrice(customW, customH)}}
                 imageSrc={activeUrl}
                 style={{
                   background:'#ff4d00',
@@ -360,6 +365,15 @@ export default function Product() {
       {/* Temporarily remove carousel to simplify add-to-cart flow */}
     </div>
   );
+}
+
+function formatEstPrice(w, h) {
+  const RATE = 0.35; // USD per square inch; adjust as needed or derive from env
+  const area = Math.max(1, Number(w) * Number(h));
+  let price = area * RATE;
+  price = Math.max(20, Math.min(499, price));
+  price = Math.floor(price) + 0.99;
+  return `$${price.toFixed(2)} USD`;
 }
 
 function Metafield({html, fallbacks = []}) {
@@ -437,7 +451,7 @@ function PrintifyTypes({handle, productTitle, selectedSize}) {
             setValue(next);
             const match = types.find((t) => t.label === next);
             if (match?.shopifyHandle) {
-              const q = selectedSize ? `?size=${encodeURIComponent(selectedSize)}` : '';
+              const q = selectedSize ? `?selectedOptions%5BSize%5D=${encodeURIComponent(selectedSize)}` : '';
               navigate(`/products/${match.shopifyHandle}${q}`, {replace: true, preventScrollReset: true});
             } else if (productTitle) {
               const q = encodeURIComponent(`${productTitle} ${next}`);

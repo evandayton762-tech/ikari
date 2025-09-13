@@ -239,7 +239,7 @@ export default function ProductQuickView({handle, gid, open, onClose}) {
                 disabled={!currentVariant?.availableForSale}
                 imageSrc={product?.featuredImage?.url}
                 attributes={{
-                  ...(sizeValues.length === 0 ? {CustomSize: `${customW} x ${customH} in`} : {}),
+                  ...(sizeValues.length === 0 ? {CustomSize: `${customW} x ${customH} in`, EstimatedPrice: formatEstPrice(customW, customH)} : {}),
                   ...(printifySize ? {PrintifySize: printifySize} : {}),
                 }}
               >

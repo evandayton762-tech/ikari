@@ -87,6 +87,15 @@ export function CartLineItem({layout, line}) {
             ))}
           </ul>
         ) : null}
+        {Array.isArray(line?.attributes) && line.attributes.length ? (
+          <ul>
+            {line.attributes.map((a) => (
+              <li key={a.key}>
+                <small>{a.key}: {a.value}</small>
+              </li>
+            ))}
+          </ul>
+        ) : null}
         <CartLineQuantity line={line} />
       </div>
     </li>
