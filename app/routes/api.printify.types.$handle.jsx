@@ -3,7 +3,6 @@ import {hasPrintify, listProducts} from '~/lib/printify.server';
 
 export async function loader({params, request, context}) {
   const {env, storefront} = context;
-  if (!hasPrintify(env)) return json({ok: false, error: 'PRINTIFY_API_KEY not set'}, {status: 400});
 
   const {handle} = params;
   if (!handle) return json({ok:false, error:'Missing handle'}, {status:400});
@@ -15,32 +14,34 @@ export async function loader({params, request, context}) {
 
   const url = new URL(request.url);
   const shopId = url.searchParams.get('shop') || env.PRINTIFY_SHOP_ID;
-  if (!shopId) return json({ok: false, error: 'Missing PRINTIFY_SHOP_ID'}, {status: 400});
+  const canUsePrintify = hasPrintify(env) && Boolean(shopId);
 
   const titleSlug = slugify(product.title);
   const related = [];
   const seen = new Set();
-  try {
-    for (let page = 1; page <= 5; page++) {
-      const list = await listProducts(env, shopId, {page});
-      if (!Array.isArray(list) || !list.length) break;
-      for (const p of list) {
-        const pSlug = slugify(p?.title || '');
-        if (pSlug !== titleSlug) continue;
-        const key = p.id || `${pSlug}:${p?.blueprint_id || ''}:${p?.print_provider_id || ''}`;
-        if (seen.has(key)) continue; seen.add(key);
-        const label = inferTypeLabel(p);
-        related.push({
-          id: p.id,
-          title: p.title,
-          blueprintId: p.blueprint_id || null,
-          providerId: p.print_provider_id || null,
-          label,
-        });
+  if (canUsePrintify) {
+    try {
+      for (let page = 1; page <= 5; page++) {
+        const list = await listProducts(env, shopId, {page});
+        if (!Array.isArray(list) || !list.length) break;
+        for (const p of list) {
+          const pSlug = slugify(p?.title || '');
+          if (pSlug !== titleSlug) continue;
+          const key = p.id || `${pSlug}:${p?.blueprint_id || ''}:${p?.print_provider_id || ''}`;
+          if (seen.has(key)) continue; seen.add(key);
+          const label = inferTypeLabel(p);
+          related.push({
+            id: p.id,
+            title: p.title,
+            blueprintId: p.blueprint_id || null,
+            providerId: p.print_provider_id || null,
+            label,
+          });
+        }
       }
+    } catch (e) {
+      // Swallow Printify errors and fall back to defaults
     }
-  } catch (e) {
-    return json({ok:false, error:String(e)}, {status:500});
   }
 
   // Attempt to resolve Shopify product handles for each inferred type label
@@ -109,4 +110,3 @@ async function findShopifyHandleForType(storefront, title, label) {
   }
   return null;
 }
-
